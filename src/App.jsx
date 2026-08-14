@@ -8,11 +8,12 @@ import ReviewPublish from "./pages/properties/ReviewPublish";
 import InvestmentLayout from "./pages/investments/InvestmentLayout";
 import InvestmentDetails from "./pages/investments/InvestmentDetails";
 import EditDetails from "./pages/investments/EditDetails";
-// import UserLayout from "./pages/users/UserLayout";
+import UserLayout from "./pages/users/UserLayout";
  import TransactionLayout from "./pages/transactions/TransactionLayout";
  import TransactionsDeatils from "./pages/transactions/TransactionsDeatils";
 import SettingsLayout from "./pages/settings/SettingsLayout"
 import Notification from "./pages/Notification"
+import UserDetails from "./pages/users/UserDetails"
 
 function App() {
   return (
@@ -26,11 +27,12 @@ function App() {
         <Route path="investments" element={<InvestmentLayout/>}/>
         <Route path="investments/:id" element={<InvestmentDetails/>}/>
         <Route path="edit-details" element={<EditDetails/>}/>
-         {/* <Route path="users" element={<UserLayout/>}/> */}
+         <Route path="users" element={<UserLayout/>}/>
         <Route path="transactions" element={<TransactionLayout/>}/> 
         <Route path='transactions/:id' element={<TransactionsDeatils/>}/>
         <Route path="settings" element={<SettingsLayout/>}/>
         <Route path="notification" element={<Notification/>}/>
+        <Route path="users/:id" element={<UserDetails/>}/>
       </Route>
     </Routes>
   );
