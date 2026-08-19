@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import Wrapper from '../../components/Wrapper'
 import Button from '../../components/Button'
-import { investments } from './investmentsData'
+import { investments } from './InvestmentsData'
 import { fontSize, fontWeight, fontFamily, textColor } from "../../styles/theme";
 import buttonImg from "../../assets/icons/button.png"
 

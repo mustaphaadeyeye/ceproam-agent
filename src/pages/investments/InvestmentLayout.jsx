@@ -10,7 +10,7 @@ import UserIcon from "../../assets/icons/dolla.png"
 import NairaIcon from "../../assets/icons/division.png"
 import FilterBar from "../investments/FilterBar"
 import InvestmentCard from "../investments/InvestmentCard"
-import { investments } from "./investmentsData"
+import { investments } from "./InvestmentsData"
 
 const InvestmentLayout = () => {
   return (
