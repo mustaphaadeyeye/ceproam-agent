@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import Wrapper from '../../components/Wrapper'
@@ -5,6 +6,7 @@ import Button from '../../components/Button'
 import { investments } from './InvestmentsData'
 import { fontSize, fontWeight, fontFamily, textColor } from "../../styles/theme";
 import buttonImg from "../../assets/icons/button.png"
+import InvestmentModal from "../../components/modals/InvestmentModal"
 
 const statusStyles = {
   Ongoing: 'bg-green-50 text-green-600',
@@ -28,6 +30,7 @@ const DetailRow = ({ leftLabel, leftValue, rightLabel, rightValue }) => (
 const InvestmentDetails = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
 
   const investment = investments.find((item) => item.id === id)
 
@@ -45,7 +48,14 @@ const InvestmentDetails = () => {
   }
 
   const handleRemove = () => {
-    console.log('Remove investment', investment.id)
+    setIsRemoveModalOpen(true)
+  }
+
+  const confirmRemove = () => {
+    console.log('Removing investment', investment.id)
+    // TODO: replace with actual delete logic (API call, state update, etc.)
+    setIsRemoveModalOpen(false)
+    navigate(-1)
   }
 
   const handleEdit = () => {
@@ -74,7 +84,7 @@ const InvestmentDetails = () => {
                 <h2 className={`${textColor.primary800} ${fontWeight.bold} text-[30px]`}>{investment.title}</h2>
             <button
               onClick={handleEdit}
-              className="w-8 h-8 flex items-center justify-center rounded-md "
+              className="w-8 h-8 flex items-center justify-center rounded-md cursor-pointer "
             >
               <img src={buttonImg} alt="" />
             </button>
@@ -149,6 +159,12 @@ const InvestmentDetails = () => {
         />
       </div>
     </Wrapper>
+
+    <InvestmentModal
+      isOpen={isRemoveModalOpen}
+      onClose={() => setIsRemoveModalOpen(false)}
+      onConfirm={confirmRemove}
+    />
     </div>
   )
 }

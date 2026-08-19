@@ -298,7 +298,7 @@ const PropertyDetails = () => {
 
             </div>
 
-            <button className="w-full h-12 rounded-lg bg-[#182C7A] text-white mt-8"
+            <button className="w-full h-12 rounded-lg bg-[#182C7A] text-white mt-8 cursor-pointer"
             onClick={handleMediaUpload}
             >
               Continue
