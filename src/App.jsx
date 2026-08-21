@@ -14,6 +14,9 @@ import UserLayout from "./pages/users/UserLayout";
 import SettingsLayout from "./pages/settings/SettingsLayout"
 import Notification from "./pages/Notification"
 import UserDetails from "./pages/users/UserDetails"
+import AvailableProperty from "./pages/properties/AvailableProperty"
+import PendingProperty from "./pages/properties/PendingProperty"
+import SoldProperty from "./pages/properties/SoldProperty"
 
 function App() {
   return (
@@ -33,6 +36,9 @@ function App() {
         <Route path="settings" element={<SettingsLayout/>}/>
         <Route path="notification" element={<Notification/>}/>
         <Route path="users/:id" element={<UserDetails/>}/>
+        <Route path="available-property" element={<AvailableProperty/>}/>
+        <Route  path="pending-property" element={<PendingProperty/>}/>
+        <Route path="sold-property" element={<SoldProperty/>}/>
       </Route>
     </Routes>
   );

@@ -2,10 +2,13 @@ import { useState } from "react";
 import Wrapper from "../../components/Wrapper";
 import { fontFamily } from "../../styles/theme";
 import checkersImg from "../../assets/images/checkers.png";
+import { ArrowLeft } from 'lucide-react'
+import { useParams, useNavigate } from 'react-router-dom'
 import InvestmentModal from "../../components/modals/InvestmentModal"
 
+
 const ReviewPublish = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const property = {
     title: "Luxury Apartment",
@@ -25,13 +28,19 @@ const ReviewPublish = () => {
     propertyTaxes: "$3,500",
   };
 
+    const navigate = useNavigate()
+
+      const handleDetails = () => {
+    navigate("/properties-details");
+  };
+
   return (
     <Wrapper>
-      <div className={`py-8 ${fontFamily.main}`}>
+      <div className={` ${fontFamily.main}`}>
 
         {/* Stepper */}
 
-        <div className="flex justify-center items-center mb-10">
+        {/* <div className="flex justify-center items-center mb-10">
 
           <div className="flex flex-col items-center">
             <div className="w-8 h-8 rounded-full bg-[#182C7A] text-white flex items-center justify-center text-sm">
@@ -64,31 +73,33 @@ const ReviewPublish = () => {
             </p>
           </div>
 
-        </div>
+        </div> */}
 
         {/* Card */}
 
-        <div className="bg-white rounded-xl p-8">
+        <div className="bg-white rounded-xl py-8 px-40">
 
           {/* Header */}
+<div className="flex items-center justify-between mb-6">
+  <div className="flex items-start gap-4">
+    <button onClick={() => navigate(-1)} className="text-black mt-1 cursor-pointer">
+      <ArrowLeft size={20} />
+    </button>
 
-          <div className="flex justify-between items-start mb-6">
+    <div className="flex flex-col">
+      <h2 className="font-semibold text-lg">{property.title}</h2>
+      <span className="text-sm text-gray-400">{property.subtitle}</span>
+    </div>
+  </div>
 
-            <div>
-              <h2 className="font-semibold text-lg">
-                {property.title}
-              </h2>
-              <p className="text-sm text-gray-400 mt-1">
-                {property.subtitle}
-              </p>
-            </div>
+  <button className="bg-[#182C7A] text-white text-sm px-6 h-9 rounded-lg"
+  onClick={handleDetails}
+  >
+    Edit
+  </button>
+</div>
 
-            <button className="bg-[#182C7A] text-white text-sm px-6 h-9 rounded-lg">
-              Upload
-            </button>
-
-          </div>
-
+           
           {/* Hero image */}
 
           <div className="w-full h-64 rounded-xl overflow-hidden mb-8">
@@ -202,10 +213,10 @@ const ReviewPublish = () => {
           {/* Delete button */}
 
           <div className="flex justify-end mt-6">
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="bg-red-500 text-white text-sm px-6 h-10 rounded-lg cursor-pointer"
+            <button 
+             type="button"
+            className="bg-red-500 text-white text-sm px-6 h-10 rounded-lg cursor-pointer"
+             onClick={() => setIsModalOpen(true)}
             >
               Delete Property
             </button>
@@ -214,13 +225,11 @@ const ReviewPublish = () => {
         </div>
 
       </div>
-
-      {/* Investment Modal */}
+        {/* Investment Modal */}
       <InvestmentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-
     </Wrapper>
   );
 };
