@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from "react";
 import Wrapper from '../../components/Wrapper'
 import BackgroundCard from '../../components/BackgroundCard'
 import IconBg from '../../components/IconBg'
@@ -8,6 +8,7 @@ import UserIcon from "../../assets/icons/soldicon.png"
 import NairaIcon from "../../assets/icons/avaicon.png"
 import { ArrowUp, CheckCircle2, Circle } from "lucide-react"
 import { fontSize, fontWeight, fontFamily, textColor } from "../../styles/theme"
+import CancelsModal from "../../components/modals/CancelsModal"
 
 const checklistItems = [
   {
@@ -31,10 +32,10 @@ const checklistItems = [
 ]
 
 const PendingProperty = () => {
-  const handleCancelSale = () => {
-    // TODO: wire up actual cancel-sale logic (e.g. open confirmation modal, call API)
-    console.log("Cancel sale clicked")
-  }
+
+   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  
 
   return (
     <div className={`${fontFamily.main}`}>
@@ -143,14 +144,19 @@ const PendingProperty = () => {
                 </div>
 
                 <button
-                  type="button"
-                  onClick={handleCancelSale}
+                 
+                 type="button"
+              onClick={() => setIsModalOpen(true)}
                   className={`bg-red-500 hover:bg-red-600 text-white ${fontWeight.medium} ${fontSize.sm} rounded-lg px-5 py-2.5 whitespace-nowrap transition-colors shrink-0 cursor-pointer`}
                 >
                   Cancel Sale
                 </button>
               </div>
-
+                  {/* Investment Modal */}
+                      <CancelsModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                      />
               {/* Checklist */}
               <div className="flex flex-col gap-5">
                 {checklistItems.map((item, index) => (
