@@ -1,226 +1,176 @@
 import { useState } from "react";
 import Wrapper from "../../components/Wrapper";
 import { fontFamily } from "../../styles/theme";
-import checkersImg from "../../assets/images/checkers.png";
-import InvestmentModal from "../../components/modals/InvestmentModal"
+import { ArrowLeft } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import api from "../../api/axios";
+import toast from "react-hot-toast";
+import { propertyUploadFiles } from "./MediaUpload";
 
 const ReviewPublish = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const propertyId = searchParams.get("id"); // Check if we are editing an existing property
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const property = {
-    title: "Luxury Apartment",
-    subtitle: "Single family Home",
-    image: checkersImg,
-    description:
-      "This charming single-family home features 4 bedrooms, 2 bathrooms, and a spacious living area. The property includes a modern kitchen, a large backyard, and a two-car garage. Located in a quiet neighborhood with easy access to local amenities and schools.",
-    propertyType: "Single Family Home",
-    location: "123 Maple Street, Anytown, USA",
-    bedrooms: 4,
-    bathrooms: 2,
-    squareFootage: "1,800 sqft",
-    lotSize: "0.25 acres",
-    yearBuilt: 2005,
-    parking: "2-Car Garage",
-    purchasePrice: "$350,000",
-    propertyTaxes: "$3,500",
+  const property = JSON.parse(
+    sessionStorage.getItem("new_property_form") || "{}",
+  );
+  const media = JSON.parse(
+    sessionStorage.getItem("new_property_media") ||
+      '{"cover":null, "images":[]}',
+  );
+
+  const handlePublish = async () => {
+    setIsSubmitting(true);
+    try {
+      const formData = new FormData();
+
+      formData.append("title", property.title || "Luxury Property");
+      formData.append(
+        "description",
+        property.description || "No description provided",
+      );
+      formData.append("price", Number(property.price || 0));
+      formData.append("location", property.location || "Lagos");
+      formData.append("status", property.status || "ACTIVE");
+      formData.append(
+        "category",
+        property.listingType === "RENT" ? "RENT" : "SALE",
+      );
+      formData.append("bedrooms", Number(property.bedrooms || 3));
+      formData.append("bathrooms", Number(property.bathrooms || 2));
+      formData.append("area", Number(property.area || 250));
+
+      if (propertyUploadFiles.coverFile) {
+        formData.append("coverImage", propertyUploadFiles.coverFile);
+      }
+
+      if (
+        propertyUploadFiles.subFiles &&
+        propertyUploadFiles.subFiles.length > 0
+      ) {
+        propertyUploadFiles.subFiles.forEach((file) => {
+          formData.append("images", file);
+        });
+      }
+
+      if (
+        propertyUploadFiles.videoFiles &&
+        propertyUploadFiles.videoFiles.length > 0
+      ) {
+        propertyUploadFiles.videoFiles.forEach((file) => {
+          formData.append("videos", file);
+        });
+      }
+
+      if (propertyId) {
+        // 🎯 EDIT MODE: Send PATCH request to update existing property
+        await api.patch(`/properties/${propertyId}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        toast.success("Property updated successfully!");
+      } else {
+        // 🎯 CREATE MODE: Send POST request for new property
+        await api.post("/properties", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        toast.success("Property published successfully!");
+      }
+
+      sessionStorage.removeItem("new_property_form");
+      sessionStorage.removeItem("new_property_media");
+      sessionStorage.removeItem("edit_existing_media");
+      navigate("/app/properties");
+    } catch (err) {
+      console.error("Submission error:", err.response?.data);
+      toast.error(
+        err.response?.data?.message ||
+          "Failed to save property. Please check inputs.",
+      );
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <Wrapper>
       <div className={`py-8 ${fontFamily.main}`}>
-
-        {/* Stepper */}
-
-        <div className="flex justify-center items-center mb-10">
-
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 rounded-full bg-[#182C7A] text-white flex items-center justify-center text-sm">
-              ✓
-            </div>
-            <p className="text-xs mt-2 text-gray-500">
-              Property Details
-            </p>
-          </div>
-
-          <div className="w-16 md:w-24 h-[2px] bg-[#182C7A] mx-2 mb-6" />
-
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 rounded-full bg-[#182C7A] text-white flex items-center justify-center text-sm">
-              ✓
-            </div>
-            <p className="text-xs mt-2 text-gray-500">
-              Media Upload
-            </p>
-          </div>
-
-          <div className="w-16 md:w-24 h-[2px] bg-[#182C7A] mx-2 mb-6" />
-
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 rounded-full bg-[#182C7A] text-white flex items-center justify-center text-sm">
-              ✓
-            </div>
-            <p className="text-xs mt-2 font-medium text-[#182C7A]">
-              Review & Publish
-            </p>
-          </div>
-
-        </div>
-
-        {/* Card */}
-
-        <div className="bg-white rounded-xl p-8">
-
-          {/* Header */}
-
-          <div className="flex justify-between items-start mb-6">
-
-            <div>
+        <div className="bg-white rounded-xl p-8 shadow-sm max-w-3xl mx-auto border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <button onClick={() => navigate(-1)} className="cursor-pointer">
+                <ArrowLeft size={20} />
+              </button>
               <h2 className="font-semibold text-lg">
-                {property.title}
+                Review & Publish Property
               </h2>
-              <p className="text-sm text-gray-400 mt-1">
-                {property.subtitle}
-              </p>
             </div>
-
-            <button className="bg-[#182C7A] text-white text-sm px-6 h-9 rounded-lg">
-              Upload
+            <button
+              type="button"
+              onClick={() =>
+                navigate(
+                  `/app/properties-details${propertyId ? `?id=${propertyId}` : ""}`,
+                )
+              }
+              className="text-[#182C7A] text-xs font-semibold cursor-pointer hover:underline"
+            >
+              Edit Details
             </button>
-
           </div>
 
-          {/* Hero image */}
-
-          <div className="w-full h-64 rounded-xl overflow-hidden mb-8">
+          <div className="w-full h-64 rounded-xl overflow-hidden mb-8 bg-gray-100">
             <img
-              src={property.image}
-              alt={property.title}
+              src={
+                media.cover ||
+                "https://images.unsplash.com/photo-1600607687939-ce8a6c25118b?w=900"
+              }
+              alt="Cover"
               className="w-full h-full object-cover"
             />
           </div>
 
-          {/* Description */}
-
           <h3 className="font-semibold text-sm mb-2">
-            Description
+            {property.title || "Property Title"}
           </h3>
-
-          <p className="text-sm text-gray-500 leading-relaxed mb-8">
-            {property.description}
+          <p className="text-sm text-gray-500 leading-relaxed mb-6">
+            {property.description || "No description provided."}
           </p>
 
-          {/* Property Details */}
-
-          <h3 className="font-semibold text-sm mb-4">
-            Property Details
-          </h3>
-
-          <div className="grid md:grid-cols-2 gap-x-10">
-
-            <div className="flex justify-between py-4 border-t border-gray-100">
-              <div>
-                <p className="text-xs text-gray-400">Property Type</p>
-                <p className="text-sm font-medium mt-1">{property.propertyType}</p>
-              </div>
+          <div className="grid grid-cols-2 gap-4 text-sm mb-8 bg-gray-50 p-4 rounded-lg">
+            <div>
+              <span className="text-gray-400">Location:</span>{" "}
+              {property.location || "N/A"}
             </div>
-
-            <div className="flex justify-between py-4 border-t border-gray-100">
-              <div>
-                <p className="text-xs text-gray-400">Location</p>
-                <p className="text-sm font-medium mt-1">{property.location}</p>
-              </div>
+            <div>
+              <span className="text-gray-400">Price:</span> ₦
+              {Number(property.price || 0).toLocaleString()}
             </div>
-
-            <div className="flex justify-between py-4 border-t border-gray-100">
-              <div>
-                <p className="text-xs text-gray-400">Bedrooms</p>
-                <p className="text-sm font-medium mt-1">{property.bedrooms}</p>
-              </div>
+            <div>
+              <span className="text-gray-400">Bedrooms:</span>{" "}
+              {property.bedrooms || 3}
             </div>
-
-            <div className="flex justify-between py-4 border-t border-gray-100">
-              <div>
-                <p className="text-xs text-gray-400">Bathrooms</p>
-                <p className="text-sm font-medium mt-1">{property.bathrooms}</p>
-              </div>
+            <div>
+              <span className="text-gray-400">Bathrooms:</span>{" "}
+              {property.bathrooms || 2}
             </div>
-
-            <div className="flex justify-between py-4 border-t border-gray-100">
-              <div>
-                <p className="text-xs text-gray-400">Square Footage</p>
-                <p className="text-sm font-medium mt-1">{property.squareFootage}</p>
-              </div>
-            </div>
-
-            <div className="flex justify-between py-4 border-t border-gray-100">
-              <div>
-                <p className="text-xs text-gray-400">Lot Size</p>
-                <p className="text-sm font-medium mt-1">{property.lotSize}</p>
-              </div>
-            </div>
-
-            <div className="flex justify-between py-4 border-t border-b border-gray-100">
-              <div>
-                <p className="text-xs text-gray-400">Year Built</p>
-                <p className="text-sm font-medium mt-1">{property.yearBuilt}</p>
-              </div>
-            </div>
-
-            <div className="flex justify-between py-4 border-t border-b border-gray-100">
-              <div>
-                <p className="text-xs text-gray-400">Parking</p>
-                <p className="text-sm font-medium mt-1">{property.parking}</p>
-              </div>
-            </div>
-
           </div>
 
-          {/* Financial Information */}
-
-          <h3 className="font-semibold text-sm mt-6 mb-4">
-            Financial Information
-          </h3>
-
-          <div className="grid md:grid-cols-2 gap-x-10">
-
-            <div className="flex justify-between py-4">
-              <div>
-                <p className="text-xs text-gray-400">Purchase Price</p>
-                <p className="text-sm font-medium mt-1">{property.purchasePrice}</p>
-              </div>
-            </div>
-
-            <div className="flex justify-between py-4">
-              <div>
-                <p className="text-xs text-gray-400">Property Taxes (Annual)</p>
-                <p className="text-sm font-medium mt-1">{property.propertyTaxes}</p>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Delete button */}
-
-          <div className="flex justify-end mt-6">
+          <div className="flex justify-end gap-3">
             <button
               type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="bg-red-500 text-white text-sm px-6 h-10 rounded-lg cursor-pointer"
+              disabled={isSubmitting}
+              onClick={handlePublish}
+              className="bg-[#182C7A] hover:bg-opacity-90 text-white text-sm px-8 h-11 rounded-lg cursor-pointer transition disabled:opacity-50"
             >
-              Delete Property
+              {isSubmitting
+                ? "Saving..."
+                : propertyId
+                  ? "Save Changes"
+                  : "Publish Property"}
             </button>
           </div>
-
         </div>
-
       </div>
-
-      {/* Investment Modal */}
-      <InvestmentModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
-
     </Wrapper>
   );
 };

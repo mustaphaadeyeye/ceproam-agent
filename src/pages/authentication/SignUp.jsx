@@ -3,7 +3,12 @@ import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/newcep.png";
 import Button from "../../components/Button";
-import { fontSize, fontWeight, fontFamily, textColor } from "../../styles/theme";
+import {
+  fontSize,
+  fontWeight,
+  fontFamily,
+  textColor,
+} from "../../styles/theme";
 import Face from "../../assets/icons/faceid.png";
 
 const NIGERIAN_STATES = [
@@ -63,7 +68,7 @@ const SignUp = () => {
     referralCode: "",
     occupation: "",
     state: "",
-    role: "user",
+    role: "AGENT", // 🔒 Set to AGENT by default and hidden from UI
     password: "",
     confirmPassword: "",
     nin: "",
@@ -91,13 +96,6 @@ const SignUp = () => {
     }`;
   };
 
-  const getRoleClass = () => {
-    const hasError = !!getFieldError("role");
-    return `grid grid-cols-2 gap-3 mt-2 p-px rounded-md ${
-      hasError ? "border border-red-500 bg-red-50" : ""
-    }`;
-  };
-
   const isActionDisabled = useMemo(() => {
     if (step === 1) {
       return (
@@ -112,7 +110,6 @@ const SignUp = () => {
       return (
         !form.occupation.trim() ||
         !form.state ||
-        !form.role ||
         !form.password ||
         !form.confirmPassword ||
         form.password !== form.confirmPassword
@@ -148,7 +145,6 @@ const SignUp = () => {
     if (!form.occupation || !form.occupation.trim())
       errs.occupation = "Occupation is required";
     if (!form.state) errs.state = "Please select your state";
-    if (!form.role) errs.role = "Please select your role";
     if (!form.password) errs.password = "Password is required";
     if (!form.confirmPassword) errs.confirmPassword = "Confirm your password";
     else if (form.password !== form.confirmPassword)
@@ -166,18 +162,6 @@ const SignUp = () => {
   };
 
   const validateStepFour = () => true;
-
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      setForm((p) => ({ ...p, faceCaptureUrl: reader.result }));
-      if (localErrors.faceCaptureUrl)
-        setLocalErrors((p) => ({ ...p, faceCaptureUrl: undefined }));
-    };
-    reader.readAsDataURL(file);
-  };
 
   const handleSkipKyc = () => {
     if (step === 3) {
@@ -222,9 +206,22 @@ const SignUp = () => {
       if (!validateStepFour()) return;
     }
 
-    // Backend submission removed — this is now a purely local, front-end-only
-    // flow. The collected form data is available here (`form`) if you need
-    // to wire it up to a request later.
+    const payload = {
+      fullName: form.fullName.trim(),
+      email: form.email.trim(),
+      password: form.password,
+      confirmPassword: form.confirmPassword,
+      phoneNumber: form.phoneNumber.trim(),
+      address: form.address.trim(),
+      occupation: form.occupation.trim(),
+      state: form.state,
+      referralCode: form.referralCode.trim() || undefined,
+      role: "AGENT", // 🔒 Explicitly locked to AGENT role for partner portal
+      nin: form.nin?.trim() || "",
+      faceCaptureUrl: form.faceCaptureUrl || "",
+    };
+
+    console.log("Agent Signup Payload:", payload);
     navigate("/");
   };
 
@@ -242,7 +239,9 @@ const SignUp = () => {
         </div>
 
         <div
-          className={`"w-full max-w-xl bg-white rounded-2xl  shadow-sm" ${step === 3 || step === 4 ? "py-16 p-12" : "py-12 p-12"}`}
+          className={`w-full max-w-xl bg-white rounded-2xl shadow-sm ${
+            step === 3 || step === 4 ? "py-16 p-12" : "py-12 p-12"
+          }`}
         >
           <div className="flex items-center justify-between mb-6">
             {step !== 1 ? (
@@ -279,7 +278,7 @@ const SignUp = () => {
           <div className="text-center mb-8">
             <h2 className="text-[22px] font-semibold text-[#111827]">
               {step === 1
-                ? "Signup"
+                ? "Agent Signup"
                 : step === 2
                   ? "Personal Information"
                   : "KYC"}
@@ -287,12 +286,12 @@ const SignUp = () => {
 
             <p className="text-[#6B7280] text-[13px] w-[50%] mx-auto leading-5 mt-2">
               {step === 1
-                ? "Create an account to explore, buy, and invest in top properties with ease."
+                ? "Create your partner account to manage properties and investments."
                 : step === 2
-                  ? "Help us create a secure and personalized experience for you."
-                  : "Verify your identity to secure your account and access all platform features."}
+                  ? "Help us create a secure and professional experience for you."
+                  : "Verify your identity to secure your management account."}
             </p>
-            <div className="inline-flex items-center rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-1 text-[12px] font-medium text-[#4B5563]">
+            <div className="inline-flex items-center rounded-full border border-[#E5E7EB] bg-[#F8FAFC] px-3 py-1 text-[12px] font-medium text-[#4B5563] mt-2">
               Step {step} of 4
             </div>
           </div>
@@ -442,30 +441,6 @@ const SignUp = () => {
                 )}
 
                 <label className="block text-xs text-[#6B7280] mt-3">
-                  Choose Account Role
-                </label>
-                <div className={getRoleClass()}>
-                  {[
-                    ["user", "User"],
-                    ["agent", "Agent"],
-                  ].map(([val, label]) => (
-                    <button
-                      key={val}
-                      type="button"
-                      onClick={() => setForm((p) => ({ ...p, role: val }))}
-                      className={`w-full p-3 rounded-md ${form.role === val ? "border-[#02024D] bg-[#F5F7FF]" : "border border-[#E5E7EB] bg-white"}`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-                {getFieldError("role") && (
-                  <p className="text-xs text-red-600 mt-1">
-                    {getFieldError("role")}
-                  </p>
-                )}
-
-                <label className="block text-xs text-[#6B7280] mt-3">
                   Password
                 </label>
                 <div className="relative">
@@ -503,7 +478,11 @@ const SignUp = () => {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-3 text-gray-500"
                   >
-                    {showConfirmPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+                    {showConfirmPassword ? (
+                      <Eye size={16} />
+                    ) : (
+                      <EyeOff size={16} />
+                    )}
                   </button>
                 </div>
               </>
@@ -544,7 +523,6 @@ const SignUp = () => {
                 <label className="block text-center text-xs text-[#6B7280] mt-2">
                   Face Capture (photo)
                 </label>
-                {/* Face scan avatar */}
                 <div className="flex justify-center items-center mt-8 mb-8">
                   <img
                     src={Face}
@@ -552,16 +530,6 @@ const SignUp = () => {
                     className="w-[120px] h-[120px] object-contain"
                   />
                 </div>
-                {/* <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className={`mt-2 rounded-md px-3 py-2 border ${
-                    getFieldError("faceCaptureUrl")
-                      ? "border-red-500"
-                      : "border-[#E5E7EB]"
-                  }`}
-                /> */}
                 {getFieldError("faceCaptureUrl") && (
                   <p className="text-xs text-red-600 mt-1">
                     {getFieldError("faceCaptureUrl")}
@@ -579,10 +547,10 @@ const SignUp = () => {
                   <Button
                     type="submit"
                     text="Create Account"
-                    bg="bg-[#02024D]"
-                    width="w-full"
-                    height="h-12"
-                    rounded="rounded-md"
+                    bgColor="bg-[#02024D]"
+                    width="100%"
+                    height="48px"
+                    rounded="md"
                     className="text-white"
                     disabled={isActionDisabled}
                   />
@@ -594,15 +562,15 @@ const SignUp = () => {
               <>
                 <div className="mt-6">
                   <Button
-  type="submit"
-  text="Continue"
-  bgColor="bg-[#02024D]"
-  width="100%"
-  height="48px"
-  rounded="md"
-  className="text-white"
-  disabled={isActionDisabled}
-/>
+                    type="submit"
+                    text="Continue"
+                    bgColor="bg-[#02024D]"
+                    width="100%"
+                    height="48px"
+                    rounded="md"
+                    className="text-white"
+                    disabled={isActionDisabled}
+                  />
                 </div>
 
                 <button

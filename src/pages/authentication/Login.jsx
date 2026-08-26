@@ -3,14 +3,18 @@ import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/newcep.png";
 import Button from "../../components/Button";
-import { fontSize, fontWeight, fontFamily, textColor } from "../../styles/theme";
-
+import { fontFamily } from "../../styles/theme";
+import { useAuthStore } from "../../stores/auth.store";
+import api from "../../api/axios"; // Adjust path to your axios instance
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [localErrors, setLocalErrors] = useState({});
   const [form, setForm] = useState({ email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const logout = useAuthStore((state) => state.logout);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,14 +51,40 @@ const Login = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    // Backend submission removed — this is now a purely local, front-end-only
-    // flow. The collected form data is available here (`form`) if you need
-    // to wire it up to a request later.
-    navigate("/app", { replace: true });
+    setIsLoading(true);
+    try {
+      // Connect to your backend login endpoint
+      const response = await api.post("/auth/login", {
+        email: form.email.trim(),
+        password: form.password,
+      });
+
+      const { access_token, user } = response.data;
+
+      // 🔒 STRICT CHECK: Reject if user is not an AGENT
+      if (user.role !== "AGENT") {
+        logout();
+        setLocalErrors({
+          _global: "Access restricted. Only Agent accounts can log in here.",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      setAuth(user, access_token);
+      navigate("/app", { replace: true });
+    } catch (error) {
+      setIsLoading(false);
+      setLocalErrors({
+        _global:
+          error.response?.data?.message ||
+          "Invalid login credentials. Please try again.",
+      });
+    }
   };
 
   return (
@@ -62,7 +92,6 @@ const Login = () => {
       className={`min-h-screen bg-[#F9FAFB] flex items-center justify-center px-6 ${fontFamily.main}`}
     >
       <div className="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-36 w-full lg:w-auto">
-        {/* Logo Section - hidden on mobile to save vertical space, shown on lg+ */}
         <div className="hidden lg:flex justify-center items-center">
           <img
             src={logo}
@@ -71,16 +100,15 @@ const Login = () => {
           />
         </div>
 
-        {/* Login Card */}
         <div className="bg-white w-full max-w-[520px] rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-[#F1F1F1] px-6 sm:px-10 py-10 sm:py-12">
-          {/* Heading */}
           <div className="text-center mb-10">
-            <h2 className="text-[22px] font-semibold text-[#111827]">Login</h2>
-
+            <h2 className="text-[22px] font-semibold text-[#111827]">
+              Agent Portal Login
+            </h2>
             <p className="text-[#6B7280] text-[13px] leading-5 mt-2">
-              Let's get you back to discovering
+              Log in to manage properties, investments,
               <br />
-              your perfect property.
+              and track platform analytics.
             </p>
           </div>
 
@@ -90,12 +118,11 @@ const Login = () => {
                 {getFieldError("_global")}
               </div>
             )}
-            {/* Email */}
+
             <div className="mb-5">
               <label className="block text-[13px] text-[#6B7280] mb-2">
                 Email
               </label>
-
               <input
                 name="email"
                 type="email"
@@ -111,12 +138,10 @@ const Login = () => {
               )}
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-[13px] text-[#6B7280] mb-2">
                 Password
               </label>
-
               <div className="relative">
                 <input
                   name="password"
@@ -126,17 +151,12 @@ const Login = () => {
                   value={form.password}
                   onChange={handleChange}
                 />
-
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
                 >
-                  {showPassword ? (
-                    <Eye size={15} />
-                  ) : (
-                    <EyeOff size={15} />
-                  )}
+                  {showPassword ? <Eye size={15} /> : <EyeOff size={15} />}
                 </button>
               </div>
               {getFieldError("password") && (
@@ -146,7 +166,6 @@ const Login = () => {
               )}
             </div>
 
-            {/* Forgot Password */}
             <div className="flex justify-end mt-3 mb-8">
               <button
                 type="button"
@@ -157,33 +176,19 @@ const Login = () => {
               </button>
             </div>
 
-            {/* Login Button */}
             <Button
-  text="Login"
-  bgColor="bg-[#02024D]"
-  width="100%"
-  height="48px"
-  rounded="md"
-  className="text-white text-sm font-medium hover:opacity-90 transition"
-  type="submit"
-  disabled={!form.email.trim() || !form.password}
-/>
-            {/* Google Button */}
-            <button
-              type="button"
-              className="w-full h-[48px] border border-[#E5E7EB] rounded-md mt-3 flex items-center justify-center gap-3 text-sm text-[#4B5563] bg-white hover:bg-gray-50 transition"
-            >
-              <img
-                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-                alt="Google"
-                className="w-4 h-4"
-              />
-              Continue with Google
-            </button>
+              text={isLoading ? "Logging in..." : "Login"}
+              bgColor="bg-[#02024D]"
+              width="100%"
+              height="48px"
+              rounded="md"
+              className="text-white text-sm font-medium hover:opacity-90 transition"
+              type="submit"
+              disabled={!form.email.trim() || !form.password || isLoading}
+            />
 
-            {/* Signup */}
             <p className="text-center text-sm text-[#6B7280] mt-6">
-              Don't have an account?{" "}
+              Don't have an agent account?{" "}
               <span
                 onClick={() => navigate("/sign-up")}
                 className="text-[#3658C9] font-medium cursor-pointer hover:underline"

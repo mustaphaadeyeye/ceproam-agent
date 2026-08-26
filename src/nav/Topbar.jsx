@@ -13,12 +13,12 @@ import { fontFamily } from "../styles/theme";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const navItems = [
-  { label: "Dashboard", icon: DashImg, path: "/" },
-  { label: "Properties", icon: GrowthIcon, path: "/properties" },
-  { label: "Investments", icon: GrowthIcon, path: "/investments" },
-  { label: "Users", icon: userIocn, path: "/users" },
-  { label: "Transactions", icon: transactionIcon, path: "/transactions" },
-  { label: "Settings", icon: settingsIcon, path: "/settings" },
+  { label: "Dashboard", icon: DashImg, path: "/app" },
+  { label: "Properties", icon: GrowthIcon, path: "/app/properties" },
+  { label: "Investments", icon: GrowthIcon, path: "/app/investments" },
+  { label: "Users", icon: userIocn, path: "/app/users" },
+  { label: "Transactions", icon: transactionIcon, path: "/app/transactions" },
+  { label: "Settings", icon: settingsIcon, path: "/app/settings" },
 ];
 
 const activeIconFilter = {
@@ -26,8 +26,6 @@ const activeIconFilter = {
     "invert(20%) sepia(90%) saturate(5000%) hue-rotate(355deg) brightness(90%)",
 };
 
-
-  
 const handleNotify = () => {
   navigate("/notifications");
 };
@@ -37,17 +35,17 @@ const Topbar = () => {
   const navigate = useNavigate();
 
   const handleNotify = () => {
-  navigate("/notification");
-};
+    navigate("/notification");
+  };
 
   return (
-    <header className={`fixed top-0 left-0 w-full  bg-white/90 backdrop-blur-md shadow-lg z-50 ${fontFamily.main}`}>
+    <header
+      className={`fixed top-0 left-0 w-full  bg-white/90 backdrop-blur-md shadow-lg z-50 ${fontFamily.main}`}
+    >
       <Wrapper>
         <div className="h-16 xl:h-18 flex items-center justify-between">
-
           {/* Left */}
           <div className="flex items-center gap-4 xl:gap-14">
-
             {/* Logo */}
             <div className="flex items-center">
               <img
@@ -88,7 +86,6 @@ const Topbar = () => {
 
           {/* Right */}
           <div className="flex items-center gap-2 sm:gap-3 xl:gap-4">
-
             {/* Search - full box shown lg and up (iPad Pro + desktop) */}
             <div className="hidden lg:block">
               <SearchInput
@@ -128,10 +125,7 @@ const Topbar = () => {
                 className="w-9 h-9 rounded-full object-cover"
               />
 
-              <ChevronDown
-                size={16}
-                className="text-[#05062F]"
-              />
+              <ChevronDown size={16} className="text-[#05062F]" />
             </div>
 
             {/* Avatar only, no chevron, on very small screens */}
@@ -152,7 +146,6 @@ const Topbar = () => {
             >
               {mobileOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-
           </div>
         </div>
 
