@@ -20,16 +20,20 @@ const InvestmentCard = ({
   roiLabel = 'Expected ROI',
   roi = '0%',
   duration = '0 months',
-  onEdit = () => {},
 }) => {
   const navigate = useNavigate()
 
   const handleViewDetails = () => {
-    navigate(`/investments/${id}`)
+    navigate(`/app/investments/${id}`)
+  }
+
+  // 🎯 Route directly to edit-details with the investment ID query parameter
+  const handleEdit = () => {
+    navigate(`/app/edit-details?id=${id}`)
   }
 
   return (
-    <div className="w-full bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+    <div className="w-full bg-white relative rounded-xl border border-gray-200 overflow-hidden shadow-sm pb-14">
       <div className="w-full h-40 overflow-hidden">
         <img src={image} alt={title} className="w-full h-full object-cover" />
       </div>
@@ -73,7 +77,7 @@ const InvestmentCard = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center absolute bottom-4 left-4 right-4 gap-2">
           <Button
             text="View Details"
             onClick={handleViewDetails}
@@ -85,10 +89,10 @@ const InvestmentCard = ({
             rounded="md"
             width="100%"
             height="40px"
-            className="flex-1"
+            className="flex-1 cursor-pointer"
           />
           <div>
-            <img src={buttonImg} alt="" onClick={onEdit} className="cursor-pointer" />
+            <img src={buttonImg} alt="Edit" onClick={handleEdit} className="cursor-pointer hover:opacity-80 transition" />
           </div>
         </div>
       </div>

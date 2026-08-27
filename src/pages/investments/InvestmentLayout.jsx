@@ -1,18 +1,46 @@
-import Wrapper from '../../components/Wrapper'
-import BackgroundCard from "../../components/BackgroundCard"
+import { useState } from "react";
+import Wrapper from '../../components/Wrapper';
+import BackgroundCard from "../../components/BackgroundCard";
 import { fontSize, fontWeight, fontFamily, textColor } from "../../styles/theme";
-import Button from "../../components/Button"
+import Button from "../../components/Button";
 import { Plus } from "lucide-react";
-import IconBg from "../../components/IconBg"
-import TotalIcon from "../../assets/icons/tolicon.png"
-import ActIcon from "../../assets/icons/greeninvest.png"
-import UserIcon from "../../assets/icons/dolla.png"
-import NairaIcon from "../../assets/icons/division.png"
-import FilterBar from "../investments/FilterBar"
-import InvestmentCard from "../investments/InvestmentCard"
-import { investments } from "./InvestmentsData"
+import IconBg from "../../components/IconBg";
+import TotalIcon from "../../assets/icons/tolicon.png";
+import ActIcon from "../../assets/icons/greeninvest.png";
+import UserIcon from "../../assets/icons/dolla.png";
+import NairaIcon from "../../assets/icons/division.png";
+import FilterBar from "../investments/FilterBar";
+import InvestmentCard from "../investments/InvestmentCard";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import api from "../../api/axios";
 
 const InvestmentLayout = () => {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("All Status");
+  const [type, setType] = useState("All Types");
+
+  // Fetch metrics for top cards
+  const { data: metrics, isLoading: isMetricsLoading } = useQuery({
+    queryKey: ["investment-metrics"],
+    queryFn: async () => {
+      const res = await api.get("/investments/metrics");
+      return res?.data ?? res;
+    },
+  });
+
+  // Fetch filtered investments based on search, status, and type
+  const { data: investments = [], isLoading } = useQuery({
+    queryKey: ["investments-list", search, status, type],
+    queryFn: async () => {
+      const res = await api.get(`/investments/list`, {
+        params: { search, status, type },
+      });
+      return res?.data ?? res;
+    },
+  });
+
   return (
     <div className={`${fontFamily.main}`}>
         <Wrapper>
@@ -34,6 +62,7 @@ const InvestmentLayout = () => {
                     icon={Plus}
                     className='cursor-pointer'
                     hoverBgColor='bg-[#EC2614]/90'
+                    onClick={() => navigate('/app/edit-details')}
                 />
             </div>
             </div>
@@ -46,15 +75,17 @@ const InvestmentLayout = () => {
           <div className='py-5 px-6'>
            <div className='flex justify-between mt-2'>
              <div >
-                <p className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}>Total Properties</p>
-                <h1 className={`${textColor.primary800} ${fontWeight.normal} ${fontSize['2xl']}`}>24</h1>
-            </div>
-            <div>
+                <p className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}>Total Investments</p>
+                <h1 className={`${textColor.primary800} ${fontWeight.normal} ${fontSize['2xl']}`}>
+                  {isMetricsLoading ? "..." : (metrics?.totalProperties ?? 0)}
+                </h1>
+             </div>
+             <div>
                 <IconBg
                 icon={TotalIcon}
                 iconSize={18}
                 />
-            </div>
+             </div>
            </div>
                 
           </div>
@@ -63,35 +94,39 @@ const InvestmentLayout = () => {
          <BackgroundCard rounded='2xl'
                 width='318px'
             height='108px'
-         >
+       >
           <div className='py-5 px-6'>
            <div className='flex justify-between mt-2'>
              <div >
             <p className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}>Active Investments</p>
-                <h1 className={`${textColor.primary800} ${fontWeight.normal} ${fontSize['2xl']}`}>156</h1>
-            </div>
-            <div>
+                <h1 className={`${textColor.primary800} ${fontWeight.normal} ${fontSize['2xl']}`}>
+                  {isMetricsLoading ? "..." : (metrics?.activeInvestments ?? 0)}
+                </h1>
+             </div>
+             <div>
                 <IconBg
                 icon={ActIcon}
                 iconSize={18}
                 bgColor='bg-green-100'
                 />
-            </div>
+             </div>
            </div>
-          
+         
           </div>
         </BackgroundCard>
 
          <BackgroundCard rounded='2xl'
                 width='318px'
             height='108px'
-         >
+       >
           <div className='py-5 px-6'>
-           
+         
             <div className='flex justify-between mt-2'>
                  <div>
                     <p className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}>Total Value</p>
-                <h1 className={`${textColor.primary800} ${fontWeight.normal} ${fontSize['2xl']}`}>$4.2M</h1>
+                <h1 className={`${textColor.primary800} ${fontWeight.normal} ${fontSize['2xl']}`}>
+                  {isMetricsLoading ? "..." : (metrics?.totalValue ?? "$0")}
+                </h1>
                  </div>
                  <div>
                      <IconBg
@@ -107,13 +142,15 @@ const InvestmentLayout = () => {
          <BackgroundCard rounded='2xl'
                 width='318px'
             height='108px'
-         >
+       >
           <div className='py-5 px-6'>
-          
+         
             <div className='flex justify-between mt-2'>
                  <div>
                      <p className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}>Avg ROI</p>
-                <h1 className={`${textColor.primary800} ${fontWeight.normal} ${fontSize['2xl']}`}>12.5%</h1>
+                <h1 className={`${textColor.primary800} ${fontWeight.normal} ${fontSize['2xl']}`}>
+                  {isMetricsLoading ? "..." : (metrics?.avgRoi ?? "0%")}
+                </h1>
                  </div>
 
                  <div>
@@ -129,17 +166,27 @@ const InvestmentLayout = () => {
         </BackgroundCard>
         </div>
             <div className='mt-5'>
-                <FilterBar/>
+                <FilterBar
+                  onSearchChange={(e) => setSearch(e.target.value)}
+                  onStatusChange={(val) => setStatus(val)}
+                  onTypeChange={(val) => setType(val)}
+                />
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5'>
-                {investments.map((item, index) => (
-                    <InvestmentCard key={index} {...item} />
-                ))}
-            </div>
+            {isLoading ? (
+              <div className='py-20 text-center text-gray-400 text-sm animate-pulse'>Loading investments...</div>
+            ) : investments.length === 0 ? (
+              <div className='py-20 text-center text-gray-400 text-sm'>No investment packages found.</div>
+            ) : (
+              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5'>
+                  {investments.map((item, index) => (
+                      <InvestmentCard key={item.id || index} {...item} />
+                  ))}
+              </div>
+            )}
         </Wrapper>
     </div>
   )
 }
 
-export default InvestmentLayout
+export default InvestmentLayout;

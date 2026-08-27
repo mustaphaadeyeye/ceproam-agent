@@ -5,7 +5,7 @@ import DropdownInput from "../../inputs/DropdownInput"
 
 
 const FilterBar = ({
-  searchPlaceholder = 'Search properties...',
+  searchPlaceholder = 'Search investments...',
   statusItems = ['All Status', 'Ongoing', 'Closed'],
   typeItems = ['All Types', 'Real Estate', 'Agriculture'],
   onSearchChange = () => {},

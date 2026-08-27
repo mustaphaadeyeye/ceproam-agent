@@ -1,8 +1,11 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Wrapper from "../../components/Wrapper";
 import { fontFamily } from "../../styles/theme";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import api from "../../api/axios";
+import toast from "react-hot-toast";
+import { X, UploadCloud } from "lucide-react";
 
 const ArrowLeftIcon = (props) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" {...props}>
@@ -22,18 +25,6 @@ const ChevronDownIcon = (props) => (
       d="M6 9l6 6 6-6"
       stroke="currentColor"
       strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const PencilIcon = (props) => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" {...props}>
-    <path
-      d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
-      stroke="currentColor"
-      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
@@ -89,33 +80,70 @@ const UploadCloudIcon = (props) => (
   </svg>
 );
 
-
 const categoryOptions = ["Agriculture", "Residential", "Commercial", "Hospitality"];
 const durationOptions = ["6 Months", "12 Months", "18 Months", "24 Months"];
-const roiOptions = ["Residential", "10%", "22%", "40%"];
-
-
-
-const initialPackages = [
-  { id: 1, title: "Package 1", duration: "24 Months", roi: "40%", min: "$15,000" },
-  { id: 2, title: "Package 2", duration: "12 Months", roi: "22%", min: "$5,000" },
-];
+const roiOptions = ["10%", "22%", "40%", "50%"];
 
 const EditDetails = () => {
   const fileInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
+  const videoInputRef = useRef(null);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const investmentId = searchParams.get("id");
 
   const [investmentName, setInvestmentName] = useState("");
-  const [category, setCategory] = useState(categoryOptions[0]);
+  const [category, setCategory] = useState("REAL_ESTATE");
   const [description, setDescription] = useState("");
 
-  const [duration, setDuration] = useState(durationOptions[3]);
-  const [roi, setRoi] = useState(roiOptions[0]);
+  const [duration, setDuration] = useState("12 Months");
+  const [roi, setRoi] = useState("22%");
   const [price, setPrice] = useState("");
 
-  const [packages, setPackages] = useState(initialPackages);
+  const [packages, setPackages] = useState([]);
+  
+  // Media states
   const [coverPreview, setCoverPreview] = useState(null);
+  const [coverFile, setCoverFile] = useState(null);
+  const [subFiles, setSubFiles] = useState([]);
+  const [subPreviews, setSubPreviews] = useState([]);
+  const [videoFiles, setVideoFiles] = useState([]);
+  const [videoPreviews, setVideoPreviews] = useState([]);
+
+  // Fetch existing investment if editing
+  const { data: existingInvestment } = useQuery({
+    queryKey: ["investment-edit", investmentId],
+    queryFn: async () => {
+      if (!investmentId) return null;
+      const res = await api.get(`/investments/${investmentId}`);
+      return res?.data ?? res;
+    },
+    enabled: !!investmentId,
+  });
+
+  useEffect(() => {
+    if (existingInvestment) {
+      setInvestmentName(existingInvestment.name || "");
+      setCategory(existingInvestment.category || "REAL_ESTATE");
+      setDescription(existingInvestment.description || "");
+      setCoverPreview(existingInvestment.coverImage || existingInvestment.images?.[0] || null);
+      setSubPreviews(existingInvestment.images?.slice(1) || existingInvestment.images || []);
+      setVideoPreviews(existingInvestment.videos || []);
+
+      if (Array.isArray(existingInvestment.tiers)) {
+        setPackages(
+          existingInvestment.tiers.map((t, index) => ({
+            id: index + 1,
+            title: `Package ${index + 1}`,
+            duration: `${t.durationMonths} Months`,
+            roi: `${t.roi}%`,
+            min: String(t.amount),
+          }))
+        );
+      }
+    }
+  }, [existingInvestment]);
 
   const handleAddPackage = () => {
     if (!price.trim()) return;
@@ -138,22 +166,97 @@ const EditDetails = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) setCoverPreview(URL.createObjectURL(file));
+    if (file) {
+      setCoverFile(file);
+      setCoverPreview(URL.createObjectURL(file));
+    }
   };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files?.[0];
-    if (file) setCoverPreview(URL.createObjectURL(file));
+  const handleSubImages = (e) => {
+    const files = [...e.target.files];
+    if (files.length === 0) return;
+    setSubFiles((prev) => [...prev, ...files]);
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setSubPreviews((prev) => [...prev, ...newPreviews]);
   };
+
+  const handleVideos = (e) => {
+    const files = [...e.target.files];
+    if (files.length === 0) return;
+    setVideoFiles((prev) => [...prev, ...files]);
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setVideoPreviews((prev) => [...prev, ...newPreviews]);
+  };
+
+  const removeSubImage = (index) => {
+    setSubPreviews((prev) => prev.filter((_, i) => i !== index));
+    if (subFiles.length > index) {
+      setSubFiles((prev) => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const removeVideo = (index) => {
+    setVideoPreviews((prev) => prev.filter((_, i) => i !== index));
+    if (videoFiles.length > index) {
+      setVideoFiles((prev) => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  // Submit mutation for creating or updating investment
+  const { mutate: saveInvestment, isPending } = useMutation({
+    mutationFn: async () => {
+      const formData = new FormData();
+      formData.append("name", investmentName);
+      formData.append("description", description);
+      formData.append("category", category.toUpperCase().replace(/\s+/g, "_"));
+      formData.append("location", "Lagos");
+
+      const formattedTiers = packages.map((pkg) => ({
+        amount: Number(pkg.min.replace(/[^0-9.]/g, "")),
+        durationMonths: parseInt(pkg.duration) || 12,
+        roi: parseFloat(pkg.roi) || 10,
+      }));
+      formData.append("tiers", JSON.stringify(formattedTiers));
+
+      if (coverFile) {
+        formData.append("coverImage", coverFile);
+      }
+
+      subFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      videoFiles.forEach((file) => {
+        formData.append("videos", file);
+      });
+
+      if (investmentId) {
+        await api.patch(`/investments/${investmentId}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } else {
+        await api.post("/investments", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+    },
+    onSuccess: () => {
+      toast.success(investmentId ? "Investment updated successfully!" : "Investment package created successfully!");
+      navigate(-1);
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || "Failed to save investment package.");
+    },
+  });
 
   return (
     <div className={`${fontFamily.main}`}>
       <Wrapper>
         <div className="bg-white px-5 sm:px-7 pt-6 pb-10 rounded-2xl shadow-[0_1px_3px_rgba(16,24,40,0.06)]">
           {/* Back */}
-          <button className="flex items-center gap-2 text-gray-500 text-sm mb-6 hover:text-gray-700 transition-colors"
-          onClick={() => navigate(-1)}
+          <button
+            className="flex items-center gap-2 text-gray-500 text-sm mb-6 hover:text-gray-700 transition-colors cursor-pointer"
+            onClick={() => navigate(-1)}
           >
             <ArrowLeftIcon />
             Back
@@ -187,13 +290,10 @@ const EditDetails = () => {
                       <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="w-full appearance-none rounded-lg bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13px] text-gray-700 outline-none focus:border-gray-300 transition-colors pr-9"
+                        className="w-full appearance-none rounded-lg bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13px] text-gray-700 outline-none focus:border-gray-300 transition-colors pr-9 cursor-pointer"
                       >
-                        {categoryOptions.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
+                        <option value="REAL_ESTATE">Real Estate</option>
+                        <option value="AGRICULTURE">Agriculture</option>
                       </select>
                       <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     </div>
@@ -205,7 +305,7 @@ const EditDetails = () => {
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Brief description of property"
+                    placeholder="Brief description of investment"
                     rows={3}
                     className="w-full resize-none rounded-lg bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13px] text-gray-700 placeholder:text-gray-400 outline-none focus:border-gray-300 transition-colors"
                   />
@@ -215,7 +315,7 @@ const EditDetails = () => {
               {/* Packages Available */}
               <div>
                 <h2 className="text-[15px] font-bold text-gray-900 mb-4">
-                  Packages Available
+                  Packages Available (Sub-Packages / Tiers)
                 </h2>
 
                 <div className="grid sm:grid-cols-2 gap-4 mb-4">
@@ -225,7 +325,7 @@ const EditDetails = () => {
                       <select
                         value={duration}
                         onChange={(e) => setDuration(e.target.value)}
-                        className="w-full appearance-none rounded-lg bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13px] text-gray-700 outline-none focus:border-gray-300 transition-colors pr-9"
+                        className="w-full appearance-none rounded-lg bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13px] text-gray-700 outline-none focus:border-gray-300 transition-colors pr-9 cursor-pointer"
                       >
                         {durationOptions.map((opt) => (
                           <option key={opt} value={opt}>
@@ -238,12 +338,12 @@ const EditDetails = () => {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[12px] text-gray-500">ROI</label>
+                    <label className="text-[12px] text-gray-500">ROI (%)</label>
                     <div className="relative">
                       <select
                         value={roi}
                         onChange={(e) => setRoi(e.target.value)}
-                        className="w-full appearance-none rounded-lg bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13px] text-gray-700 outline-none focus:border-gray-300 transition-colors pr-9"
+                        className="w-full appearance-none rounded-lg bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13px] text-gray-700 outline-none focus:border-gray-300 transition-colors pr-9 cursor-pointer"
                       >
                         {roiOptions.map((opt) => (
                           <option key={opt} value={opt}>
@@ -258,20 +358,21 @@ const EditDetails = () => {
 
                 <div className="grid sm:grid-cols-2 gap-4 items-end">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[12px] text-gray-500">Price</label>
+                    <label className="text-[12px] text-gray-500">Minimum Amount (₦)</label>
                     <input
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      placeholder="N.O.O"
+                      placeholder="e.g. 50000"
                       className="w-full rounded-lg bg-gray-50 border border-gray-100 px-3.5 py-2.5 text-[13px] text-gray-700 placeholder:text-gray-400 outline-none focus:border-gray-300 transition-colors"
                     />
                   </div>
 
                   <button
+                    type="button"
                     onClick={handleAddPackage}
-                    className="w-[224px] h-[50px] rounded-lg bg-[#92B2F8]  py-2.5 text-[13px] font-semibold text-black cursor-pointer"
+                    className="w-[224px] h-[50px] rounded-lg bg-[#92B2F8] py-2.5 text-[13px] font-semibold text-black cursor-pointer hover:bg-[#7fa4f7] transition"
                   >
-                    Add Package
+                    Add Package Tier
                   </button>
                 </div>
               </div>
@@ -283,45 +384,135 @@ const EditDetails = () => {
                 </h2>
 
                 <div
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className="cursor-pointer rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/60 flex flex-col items-center justify-center text-center py-12 px-4 hover:border-gray-300 transition-colors overflow-hidden"
+                  className="cursor-pointer rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/60 flex flex-col items-center justify-center text-center py-10 px-4 hover:border-gray-300 transition-colors overflow-hidden"
                 >
                   {coverPreview ? (
-                    <img
-                      src={coverPreview}
-                      alt="Cover preview"
-                      className="max-h-40 rounded-lg object-cover"
-                    />
+                    <div className="relative w-32 h-24 rounded-lg overflow-hidden border border-gray-200">
+                      <img src={coverPreview} className="w-full h-full object-cover" alt="Cover" />
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCoverPreview(null);
+                          setCoverFile(null);
+                        }}
+                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 cursor-pointer shadow hover:bg-red-700"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
                   ) : (
                     <>
                       <div className="w-11 h-11 rounded-full bg-blue-50 flex items-center justify-center mb-3">
                         <UploadCloudIcon />
                       </div>
                       <p className="text-[13px] text-gray-500">
-                        Drop images here or{" "}
-                        <span className="text-blue-600 font-medium">browse</span>
-                      </p>
-                      <p className="text-[11px] text-gray-400 mt-1">
-                        Supports JPG, PNG, WEBP (Minimum 1920x1080px)
+                        Drop cover image here or <span className="text-blue-600 font-medium">browse</span>
                       </p>
                     </>
                   )}
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    accept="image/*"
                     onChange={handleFileChange}
                     className="hidden"
                   />
                 </div>
               </div>
 
+              {/* Gallery Images (Sub Photos) */}
+              <div>
+                <h2 className="text-[15px] font-bold text-gray-900 mb-2">Gallery Images (Sub Photos)</h2>
+                <div
+                  onClick={() => galleryInputRef.current?.click()}
+                  className="cursor-pointer rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/60 flex flex-col items-center justify-center text-center py-10 px-4 hover:border-gray-300 transition-colors"
+                >
+                  <div className="w-11 h-11 rounded-full bg-blue-50 flex items-center justify-center mb-3">
+                    <UploadCloudIcon />
+                  </div>
+                  <p className="text-[13px] text-gray-500">
+                    Drop gallery images here or <span className="text-blue-600 font-medium">browse</span>
+                  </p>
+                  <input
+                    ref={galleryInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleSubImages}
+                    className="hidden"
+                  />
+                </div>
+
+                {subPreviews.length > 0 && (
+                  <div className="flex gap-3 mt-4 overflow-auto flex-wrap">
+                    {subPreviews.map((img, index) => (
+                      <div key={index} className="relative w-24 h-20 rounded-lg overflow-hidden border border-gray-200 group">
+                        <img src={img} className="w-full h-full object-cover" alt="" />
+                        <button
+                          type="button"
+                          onClick={() => removeSubImage(index)}
+                          className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 cursor-pointer shadow hover:bg-red-700"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Property / Package Videos (Sub Videos) */}
+              <div>
+                <h2 className="text-[15px] font-bold text-gray-900 mb-2">Package Videos (Sub Videos)</h2>
+                <div
+                  onClick={() => videoInputRef.current?.click()}
+                  className="cursor-pointer rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/60 flex flex-col items-center justify-center text-center py-10 px-4 hover:border-gray-300 transition-colors"
+                >
+                  <div className="w-11 h-11 rounded-full bg-blue-50 flex items-center justify-center mb-3">
+                    <UploadCloudIcon />
+                  </div>
+                  <p className="text-[13px] text-gray-500">
+                    Drop videos here or <span className="text-blue-600 font-medium">browse</span>
+                  </p>
+                  <input
+                    ref={videoInputRef}
+                    type="file"
+                    multiple
+                    accept="video/*"
+                    onChange={handleVideos}
+                    className="hidden"
+                  />
+                </div>
+
+                {videoPreviews.length > 0 && (
+                  <div className="flex gap-3 mt-4 overflow-auto flex-wrap">
+                    {videoPreviews.map((video, index) => (
+                      <div key={index} className="relative w-24 h-20 rounded-lg overflow-hidden border border-gray-200">
+                        <video src={video} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => removeVideo(index)}
+                          className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 cursor-pointer shadow hover:bg-red-700"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* Submit */}
               <div className="flex justify-center pt-1">
-                <button className="w-full max-w-[320px] rounded-xl bg-[#0B1533] hover:bg-[#141f4a] transition-colors py-3.5 text-[14px] font-semibold text-white cursor-pointer">
-                  Upload Investment
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => saveInvestment()}
+                  className="w-full max-w-[320px] rounded-xl bg-[#0B1533] hover:bg-[#141f4a] transition-colors py-3.5 text-[14px] font-semibold text-white cursor-pointer disabled:opacity-50"
+                >
+                  {isPending ? "Saving..." : investmentId ? "Update Investment" : "Upload Investment"}
                 </button>
               </div>
             </div>
@@ -331,7 +522,7 @@ const EditDetails = () => {
               {/* Investment Packages */}
               <div className="rounded-2xl border border-gray-100 shadow-[0_1px_3px_rgba(16,24,40,0.06)] p-4">
                 <h3 className="text-[13px] font-bold text-gray-900 mb-3">
-                  Investment Packages
+                  Investment Packages Added
                 </h3>
                 <div className="flex flex-col gap-2">
                   {packages.length === 0 && (
@@ -353,21 +544,16 @@ const EditDetails = () => {
                             <TrendUpIcon /> {pkg.roi} ROI
                           </span>
                           <span className="flex items-center gap-1">
-                            <CoinIcon /> Min {pkg.min}
+                            <CoinIcon /> Min ₦{Number(pkg.min).toLocaleString()}
                           </span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 text-gray-400">
                         <button
-                          aria-label={`Edit ${pkg.title}`}
-                          className="hover:text-gray-600 transition-colors"
-                        >
-                          <PencilIcon />
-                        </button>
-                        <button
+                          type="button"
                           aria-label={`Delete ${pkg.title}`}
                           onClick={() => handleRemovePackage(pkg.id)}
-                          className="hover:text-red-500 transition-colors"
+                          className="hover:text-red-500 transition-colors cursor-pointer"
                         >
                           <TrashIcon />
                         </button>
@@ -402,13 +588,13 @@ const EditDetails = () => {
                     {investmentName || "Eco-Friendly Villas"}
                   </p>
                   <p className="text-[13px] font-semibold text-gray-900 whitespace-nowrap">
-                    {price ? `N${price}` : "N30,000"}
+                    {price ? `₦${Number(price).toLocaleString()}` : "₦30,000"}
                   </p>
                 </div>
 
                 <p className="text-[11.5px] text-gray-400 leading-relaxed line-clamp-2 mb-2">
                   {description ||
-                    "Sustainable living with solar-powered amenities and lush green surroundings amenities and lush green surroundings..."}
+                    "Sustainable living with solar-powered amenities and lush green surroundings..."}
                 </p>
 
                 <div className="flex items-center justify-between">
