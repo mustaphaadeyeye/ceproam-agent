@@ -13,11 +13,11 @@ import Transactionsdashboard from "../transactions/Transactionsdashboard"
 
 const TransactionLayout = () => {
   return (
-    <div className={`${fontFamily.main}`}>
+    <div className={`${fontFamily.main}  xl:mt-0 lg:mt-0 mt-12`}>
         <Wrapper>
             <div>
                <BackgroundCard rounded-2xl width='full'>
-                    <div className="flex justify-between items-center py-8 px-6">
+                    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 py-6 sm:py-8 px-4 sm:px-6">
                         <div className="flex items-center gap-4">
                             <div className=''>
                                  <IconBg
@@ -34,20 +34,20 @@ const TransactionLayout = () => {
                             </div>
                             </div>
                         </div>
-                        <div>
+                        <div className='w-full sm:w-auto'>
                             <Button 
                             text='Withdraw'
                             bgColor='bg-[#05062F]'
                             rounded='lg'
                             hoverBgColor='null'
-                            className='cursor-pointer'
+                            className='cursor-pointer w-full sm:w-auto'
                             />
                         </div>
                     </div>
                </BackgroundCard>
             </div>
 
-         <div className='flex justify-between gap-4 mt-5'>
+         <div className='grid grid-cols-1 sm:grid-cols-2 xl:flex xl:justify-between gap-4 mt-5'>
         <BackgroundCard rounded='2xl'>
           <div className='py-5 px-6'>
             <p className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}>Investments</p>

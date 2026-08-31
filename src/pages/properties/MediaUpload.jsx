@@ -88,7 +88,7 @@ const MediaUpload = () => {
         videos: videoPreviews,
       }),
     );
-    // 🎯 Preserve propertyId query param when navigating to review-publish during edit mode
+    // Preserve propertyId query param when navigating to review-publish during edit mode
     navigate(`/app/review-publish${propertyId ? `?id=${propertyId}` : ""}`);
   };
 
@@ -98,51 +98,74 @@ const MediaUpload = () => {
 
   return (
     <Wrapper>
-      <div className={`py-8 ${fontFamily.main}`}>
-        {/* Stepper */}
-        <div className="flex justify-center items-center mb-10">
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 rounded-full bg-[#182C7A] text-white flex items-center justify-center text-sm">
-              ✓
+      <div
+        className={`w-full py-4 sm:py-6 md:py-8 ${fontFamily.main} xl:mt-0 lg:mt-0 mt-12`}
+      >
+        {/* ================= STEPPER ================= */}
+        <div className="w-full flex justify-center items-start mb-8 sm:mb-10 px-2">
+          <div className="flex items-start w-full max-w-2xl">
+            {/* Step 1 */}
+            <div className="flex flex-col items-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-[#182C7A] text-white flex items-center justify-center text-sm">
+                ✓
+              </div>
+              <p className="text-[10px] sm:text-xs mt-2 text-gray-500 text-center whitespace-nowrap">
+                Property Details
+              </p>
             </div>
-            <p className="text-xs mt-2 text-gray-500">Property Details</p>
-          </div>
-          <div className="w-16 md:w-24 h-[2px] bg-[#182C7A] mx-2 mb-6" />
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 rounded-full bg-[#182C7A] text-white flex items-center justify-center text-sm">
-              2
+
+            {/* Line */}
+            <div className="flex-1 h-[2px] bg-[#182C7A] mx-2 sm:mx-4 mt-4" />
+
+            {/* Step 2 */}
+            <div className="flex flex-col items-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-[#182C7A] text-white flex items-center justify-center text-sm">
+                2
+              </div>
+              <p className="text-[10px] sm:text-xs mt-2 font-medium text-[#182C7A] text-center whitespace-nowrap">
+                Media Upload
+              </p>
             </div>
-            <p className="text-xs mt-2 font-medium text-[#182C7A]">
-              Media Upload
-            </p>
-          </div>
-          <div className="w-16 md:w-24 h-[2px] bg-gray-200 mx-2 mb-6" />
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 rounded-full bg-[#E8EEF9] text-[#182C7A] flex items-center justify-center text-sm">
-              3
+
+            {/* Line */}
+            <div className="flex-1 h-[2px] bg-gray-200 mx-2 sm:mx-4 mt-4" />
+
+            {/* Step 3 */}
+            <div className="flex flex-col items-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-[#E8EEF9] text-[#182C7A] flex items-center justify-center text-sm">
+                3
+              </div>
+              <p className="text-[10px] sm:text-xs mt-2 text-gray-500 text-center whitespace-nowrap">
+                Review & Publish
+              </p>
             </div>
-            <p className="text-xs mt-2 text-gray-500">Review & Publish</p>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+        {/* ================= MAIN CONTENT ================= */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+          {/* ================= LEFT: UPLOAD PANELS ================= */}
+          <div className="lg:col-span-2 min-w-0">
             <BackgroundCard
-              width="100%"
-              height="auto"
               rounded="xl"
               shadow="none"
-              className="p-8"
+              className="p-4 sm:p-6 md:p-8 border border-gray-100"
             >
               {/* Cover Image */}
-              <h2 className="font-semibold text-lg mb-2">Main Cover Image</h2>
+              <h2 className="font-semibold text-base sm:text-lg mb-2">
+                Main Cover Image
+              </h2>
               <p className="text-sm text-gray-500 mb-4">
                 Upload the primary display photo.
               </p>
 
-              <label className="border-2 border-dashed rounded-xl h-48 flex flex-col justify-center items-center cursor-pointer bg-gray-50/50 hover:bg-gray-50 transition">
-                <UploadCloud size={40} className="text-[#182C7A]" />
-                <p className="mt-3 font-medium text-sm">
+              <label className="border-2 border-dashed rounded-xl h-40 sm:h-48 flex flex-col justify-center items-center cursor-pointer bg-gray-50/50 hover:bg-gray-50 transition text-center px-4">
+                <UploadCloud size={36} className="text-[#182C7A] sm:hidden" />
+                <UploadCloud
+                  size={40}
+                  className="text-[#182C7A] hidden sm:block"
+                />
+                <p className="mt-3 font-medium text-xs sm:text-sm">
                   Drop cover image here or browse
                 </p>
                 <input
@@ -154,7 +177,7 @@ const MediaUpload = () => {
               </label>
 
               {coverPreview && (
-                <div className="mt-4 relative w-32 h-24 rounded-lg overflow-hidden border border-gray-200">
+                <div className="mt-4 relative w-28 h-20 sm:w-32 sm:h-24 rounded-lg overflow-hidden border border-gray-200">
                   <img
                     src={coverPreview}
                     className="w-full h-full object-cover"
@@ -174,16 +197,20 @@ const MediaUpload = () => {
               )}
 
               {/* Gallery Images */}
-              <h2 className="font-semibold text-lg mt-10 mb-2">
+              <h2 className="font-semibold text-base sm:text-lg mt-8 sm:mt-10 mb-2">
                 Gallery Images
               </h2>
               <p className="text-sm text-gray-500 mb-4">
                 Upload additional photos.
               </p>
 
-              <label className="border-2 border-dashed rounded-xl h-48 flex flex-col justify-center items-center cursor-pointer bg-gray-50/50 hover:bg-gray-50 transition">
-                <UploadCloud size={40} className="text-[#182C7A]" />
-                <p className="mt-3 font-medium text-sm">
+              <label className="border-2 border-dashed rounded-xl h-40 sm:h-48 flex flex-col justify-center items-center cursor-pointer bg-gray-50/50 hover:bg-gray-50 transition text-center px-4">
+                <UploadCloud size={36} className="text-[#182C7A] sm:hidden" />
+                <UploadCloud
+                  size={40}
+                  className="text-[#182C7A] hidden sm:block"
+                />
+                <p className="mt-3 font-medium text-xs sm:text-sm">
                   Drop gallery images here or browse
                 </p>
                 <input
@@ -199,7 +226,7 @@ const MediaUpload = () => {
                 {subPreviews.map((img, index) => (
                   <div
                     key={index}
-                    className="relative w-24 h-20 rounded-lg overflow-hidden border border-gray-200 group"
+                    className="relative w-20 h-16 sm:w-24 sm:h-20 rounded-lg overflow-hidden border border-gray-200 group flex-shrink-0"
                   >
                     <img
                       src={img}
@@ -218,12 +245,17 @@ const MediaUpload = () => {
               </div>
 
               {/* Videos */}
-              <h2 className="font-semibold text-lg mt-10 mb-2">
+              <h2 className="font-semibold text-base sm:text-lg mt-8 sm:mt-10 mb-2">
                 Property Videos
               </h2>
-              <label className="border-2 border-dashed rounded-xl h-48 flex flex-col justify-center items-center cursor-pointer bg-gray-50/50 hover:bg-gray-50 transition">
-                <UploadCloud size={40} className="text-[#182C7A]" />
-                <p className="mt-3 font-medium text-sm">
+
+              <label className="border-2 border-dashed rounded-xl h-40 sm:h-48 flex flex-col justify-center items-center cursor-pointer bg-gray-50/50 hover:bg-gray-50 transition text-center px-4">
+                <UploadCloud size={36} className="text-[#182C7A] sm:hidden" />
+                <UploadCloud
+                  size={40}
+                  className="text-[#182C7A] hidden sm:block"
+                />
+                <p className="mt-3 font-medium text-xs sm:text-sm">
                   Drop videos here or browse
                 </p>
                 <input
@@ -239,9 +271,12 @@ const MediaUpload = () => {
                 {videoPreviews.map((video, index) => (
                   <div
                     key={index}
-                    className="relative w-24 h-20 rounded-lg overflow-hidden border border-gray-200"
+                    className="relative w-20 h-16 sm:w-24 sm:h-20 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0"
                   >
-                    <video src={video} className="w-full h-full object-cover" />
+                    <video
+                      src={video}
+                      className="w-full h-full object-cover"
+                    />
                     <button
                       type="button"
                       onClick={() => removeVideo(index)}
@@ -255,8 +290,8 @@ const MediaUpload = () => {
             </BackgroundCard>
           </div>
 
-          {/* Preview Sidebar */}
-          <div className="bg-white rounded-xl p-6 h-fit sticky top-6 shadow-sm">
+          {/* ================= PREVIEW SIDEBAR ================= */}
+          <div className="bg-white rounded-xl p-4 sm:p-6 h-fit lg:sticky lg:top-6 shadow-sm min-w-0">
             <h3 className="font-semibold text-center mb-5">Preview</h3>
             <img
               src={
@@ -264,12 +299,12 @@ const MediaUpload = () => {
                 subPreviews[0] ||
                 "https://images.unsplash.com/photo-1600607687939-ce8a6c25118b?w=900"
               }
-              className="w-full h-56 rounded-lg object-cover"
+              className="w-full h-48 sm:h-56 rounded-lg object-cover"
               alt=""
             />
             <button
               type="button"
-              className="w-full h-12 rounded-lg bg-[#182C7A] text-white mt-8 cursor-pointer hover:bg-opacity-90 transition"
+              className="w-full h-11 sm:h-12 rounded-lg bg-[#182C7A] text-white mt-6 sm:mt-8 cursor-pointer hover:bg-opacity-90 transition"
               onClick={handleReview}
             >
               Continue

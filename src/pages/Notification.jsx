@@ -109,9 +109,9 @@ const NotificationCard = ({ item }) => (
 
 const Notification = () => {
   return (
-    <div className={`${fontFamily.main}`}>
+    <div className={`${fontFamily.main} xl:mt-0 lg:mt-0 mt-12`}>
       <Wrapper>
-        <div className="flex bg-white px-5 sm:px-7 pt-6 pb-10 rounded-2xl">
+        <div className="flex bg-white px-4 sm:px-5 md:px-7 pt-6 pb-10 rounded-2xl">
           {/* Notifications column */}
           <div className="w-full lg:max-w-[520px] flex flex-col">
             <h1 className="text-lg font-bold text-gray-900 mb-6">

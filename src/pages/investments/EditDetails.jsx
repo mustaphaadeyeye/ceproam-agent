@@ -250,9 +250,9 @@ const EditDetails = () => {
   });
 
   return (
-    <div className={`${fontFamily.main}`}>
+    <div className={`${fontFamily.main} xl:mt-0 lg:mt-0 mt-12`}>
       <Wrapper>
-        <div className="bg-white px-5 sm:px-7 pt-6 pb-10 rounded-2xl shadow-[0_1px_3px_rgba(16,24,40,0.06)]">
+        <div className="bg-white px-4 sm:px-5 lg:px-7 pt-6 pb-10 rounded-2xl shadow-[0_1px_3px_rgba(16,24,40,0.06)]">
           {/* Back */}
           <button
             className="flex items-center gap-2 text-gray-500 text-sm mb-6 hover:text-gray-700 transition-colors cursor-pointer"
@@ -370,7 +370,7 @@ const EditDetails = () => {
                   <button
                     type="button"
                     onClick={handleAddPackage}
-                    className="w-[224px] h-[50px] rounded-lg bg-[#92B2F8] py-2.5 text-[13px] font-semibold text-black cursor-pointer hover:bg-[#7fa4f7] transition"
+                    className="w-full sm:w-[224px] h-[50px] rounded-lg bg-[#92B2F8] py-2.5 text-[13px] font-semibold text-black cursor-pointer hover:bg-[#7fa4f7] transition"
                   >
                     Add Package Tier
                   </button>
@@ -533,13 +533,13 @@ const EditDetails = () => {
                   {packages.map((pkg) => (
                     <div
                       key={pkg.id}
-                      className="flex items-center justify-between rounded-xl bg-gray-50/70 px-3 py-2.5"
+                      className="flex items-center justify-between gap-2 rounded-xl bg-gray-50/70 px-3 py-2.5"
                     >
-                      <div>
-                        <p className="text-[12.5px] font-semibold text-gray-900">
+                      <div className="min-w-0">
+                        <p className="text-[12.5px] font-semibold text-gray-900 truncate">
                           {pkg.title} - {pkg.duration}
                         </p>
-                        <div className="flex items-center gap-3 mt-1 text-[11px] text-gray-400">
+                        <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-gray-400">
                           <span className="flex items-center gap-1">
                             <TrendUpIcon /> {pkg.roi} ROI
                           </span>
@@ -548,7 +548,7 @@ const EditDetails = () => {
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-400">
+                      <div className="flex items-center gap-2 text-gray-400 shrink-0">
                         <button
                           type="button"
                           aria-label={`Delete ${pkg.title}`}

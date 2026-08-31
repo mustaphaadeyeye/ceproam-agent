@@ -42,9 +42,9 @@ const InvestmentLayout = () => {
   });
 
   return (
-    <div className={`${fontFamily.main}`}>
+    <div className={`${fontFamily.main} xl:mt-0 lg:mt-0 mt-12`}>
         <Wrapper>
-            <div className='flex justify-between'>
+            <div className='flex flex-col xl:flex-row justify-between gap-4'>
             <div>
                 <h1 className={`${fontWeight.semibold} ${fontSize[`3xl`]} ${textColor.primary800}`}>
                     Property & Investment Management
@@ -55,22 +55,23 @@ const InvestmentLayout = () => {
                 </p>
             </div>
 
-            <div>
+            <div className='w-full xl:w-auto'>
                 <Button
                     text='Create Investment Package'
                     bgColor='bg-[#EC2614]'
                     icon={Plus}
-                    className='cursor-pointer'
+                    className='cursor-pointer w-full xl:w-auto'
                     hoverBgColor='bg-[#EC2614]/90'
                     onClick={() => navigate('/app/edit-details')}
                 />
             </div>
             </div>
            
-            <div className='flex justify-between gap-4 mt-5'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 xl:flex xl:justify-between gap-4 mt-5'>
+        <div className='w-full h-[108px] xl:w-[318px]'>
         <BackgroundCard rounded='2xl'
-            width='318px'
-            height='108px'
+            width='100%'
+            height='100%'
         >
           <div className='py-5 px-6'>
            <div className='flex justify-between mt-2'>
@@ -90,10 +91,12 @@ const InvestmentLayout = () => {
                 
           </div>
         </BackgroundCard>
+        </div>
 
+        <div className='w-full h-[108px] xl:w-[318px]'>
          <BackgroundCard rounded='2xl'
-                width='318px'
-            height='108px'
+                width='100%'
+            height='100%'
        >
           <div className='py-5 px-6'>
            <div className='flex justify-between mt-2'>
@@ -114,10 +117,12 @@ const InvestmentLayout = () => {
          
           </div>
         </BackgroundCard>
+        </div>
 
+        <div className='w-full h-[108px] xl:w-[318px]'>
          <BackgroundCard rounded='2xl'
-                width='318px'
-            height='108px'
+                width='100%'
+            height='100%'
        >
           <div className='py-5 px-6'>
          
@@ -139,9 +144,11 @@ const InvestmentLayout = () => {
 
           </div>
         </BackgroundCard>
+        </div>
+        <div className='w-full h-[108px] xl:w-[318px]'>
          <BackgroundCard rounded='2xl'
-                width='318px'
-            height='108px'
+                width='100%'
+            height='100%'
        >
           <div className='py-5 px-6'>
          
@@ -164,6 +171,7 @@ const InvestmentLayout = () => {
             
           </div>
         </BackgroundCard>
+        </div>
         </div>
             <div className='mt-5'>
                 <FilterBar

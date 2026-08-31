@@ -17,14 +17,14 @@ const statusStyles = {
 };
 
 const DetailRow = ({ leftLabel, leftValue, rightLabel, rightValue }) => (
-  <div className="grid grid-cols-2 py-4 border-b border-gray-100 last:border-b-0">
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 py-4 border-b border-gray-100 last:border-b-0">
     <div>
       <p className="text-xs text-gray-400 mb-1">{leftLabel}</p>
-      <p className="text-sm text-gray-700 font-medium">{leftValue || "N/A"}</p>
+      <p className="text-sm text-gray-700 font-medium break-words">{leftValue || "N/A"}</p>
     </div>
     <div>
       <p className="text-xs text-gray-400 mb-1">{rightLabel}</p>
-      <p className="text-sm text-gray-700 font-medium">{rightValue || "N/A"}</p>
+      <p className="text-sm text-gray-700 font-medium break-words">{rightValue || "N/A"}</p>
     </div>
   </div>
 );
@@ -103,31 +103,31 @@ const InvestmentDetails = () => {
   const statusLabel = investment.status === 'ACTIVE' ? 'Ongoing' : 'Closed';
 
   return (
-    <div className={`px-4 sm:px-10 lg:px-55 ${fontFamily.main}`}>
+    <div className={`px-4 sm:px-10 lg:px-55 ${fontFamily.main} xl:mt-0 lg:mt-0 mt-12`}>
       <Wrapper>
-        <div className="relative flex flex-col items-center py-4">
+        <div className="relative flex flex-col items-center py-4 text-center">
           <button
             onClick={() => navigate(-1)}
             className="absolute left-0 top-4 text-gray-500 hover:text-gray-700 cursor-pointer"
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 className={`${textColor.primary800} ${fontSize['3xl']} ${fontWeight.semibold}`}>Investment Details</h1>
+          <h1 className={`${textColor.primary800} ${fontSize['3xl']} ${fontWeight.semibold} px-8`}>Investment Details</h1>
           <p className={`${fontSize.md} ${fontWeight.bold} ${textColor.miniGray}`}>Manage investment packages for real estate projects</p>
         </div>
 
         <div>
-          <div className="flex justify-between items-center">
-            <div className='flex gap-2 items-center'>
-              <h2 className={`${textColor.primary800} ${fontWeight.bold} text-[30px]`}>{investment.name || investment.title}</h2>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            <div className='flex gap-2 items-center min-w-0'>
+              <h2 className={`${textColor.primary800} ${fontWeight.bold} text-2xl sm:text-[30px] truncate`}>{investment.name || investment.title}</h2>
               <button
                 onClick={handleEdit}
-                className="w-8 h-8 flex items-center justify-center rounded-md cursor-pointer"
+                className="w-8 h-8 flex items-center justify-center rounded-md cursor-pointer shrink-0"
               >
                 <img src={buttonImg} alt="Edit" />
               </button>
             </div>
-            <div>
+            <div className="shrink-0">
               <Button
                 text={isDeleting ? "Removing..." : "Remove Investment"}
                 onClick={handleRemove}
@@ -138,7 +138,7 @@ const InvestmentDetails = () => {
                 fontWeight="font-medium"
                 rounded="md"
                 height="40px"
-                className="px-4 shrink-0 cursor-pointer"
+                className="px-4 shrink-0 cursor-pointer w-full sm:w-auto"
               />
             </div>
           </div>
@@ -146,7 +146,7 @@ const InvestmentDetails = () => {
 
         <p className="text-sm text-gray-500 mt-4">{investment.description}</p>
 
-        <div className="w-full h-80 rounded-xl overflow-hidden mt-6 bg-gray-100">
+        <div className="w-full h-56 sm:h-72 lg:h-80 rounded-xl overflow-hidden mt-6 bg-gray-100">
           <img
             src={coverImg}
             alt={investment.name || investment.title}
@@ -154,10 +154,10 @@ const InvestmentDetails = () => {
           />
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-xl mt-6 px-6">
-          <div className="grid grid-cols-2 py-4 border-b border-gray-200 items-center">
+        <div className="bg-white border border-gray-200 rounded-xl mt-6 px-4 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 py-4 border-b border-gray-200 sm:items-center">
             <h3 className="text-gray-800 font-semibold text-base">Investment Details</h3>
-            <div className="flex items-center gap-2 justify-end">
+            <div className="flex items-center gap-2 sm:justify-end">
               <h3 className="text-gray-800 font-semibold text-base">Status</h3>
               <span
                 className={`px-2.5 py-1 rounded-full text-xs font-medium ${

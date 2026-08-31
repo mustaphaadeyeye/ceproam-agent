@@ -13,7 +13,7 @@ const TransactionsDeatils = () => {
   if (!transaction) {
     return (
       <Wrapper>
-        <div className="py-10">
+        <div className="py-10 px-4">
           <p className="mb-4 text-sm text-gray-500">
             We couldn't find a transaction with reference "{id}".
           </p>
@@ -36,7 +36,7 @@ const TransactionsDeatils = () => {
 
   return (
     <Wrapper>
-      <div className={`w-full px-30  pt-10 ${fontFamily.main}`}>
+      <div className={`w-full px-4 sm:px-10 lg:px-20 xl:px-30 pt-6 sm:pt-10 ${fontFamily.main} xl:mt-0 lg:mt-0 mt-12`}>
         {/* Heading */}
         <h1 className="mb-5 text-xl font-bold text-gray-900">
           Transaction Details
@@ -45,7 +45,7 @@ const TransactionsDeatils = () => {
         {/* Details */}
         <div className="">
           {/* Row 1 */}
-          <div className="grid grid-cols-2 border-t border-gray-100">
+          <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-gray-100">
             {/* Transaction Type */}
             <div className="border-b border-gray-100 py-3">
               <p className=" font-medium text-gray-400">
@@ -70,7 +70,7 @@ const TransactionsDeatils = () => {
           </div>
 
           {/* Row 2 */}
-          <div className="grid grid-cols-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2">
             {/* Date */}
             <div className="border-b border-gray-100 py-3">
               <p className=" font-medium text-gray-400">
@@ -95,7 +95,7 @@ const TransactionsDeatils = () => {
           </div>
 
           {/* Row 3 */}
-          <div className="grid grid-cols-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2">
             {/* Notes */}
             <div className="border-b border-gray-100 py-3">
               <p className=" font-medium text-gray-400">
@@ -121,10 +121,10 @@ const TransactionsDeatils = () => {
         </div>
 
         {/* Back button */}
-        <div className="mt-12 flex justify-end">
+        <div className="mt-12 flex justify-center sm:justify-end">
           <button
             onClick={() => navigate("/transactions")}
-            className="cursor-pointer rounded-md bg-indigo-950 px-4 py-2  font-semibold text-white transition hover:bg-indigo-900"
+            className="cursor-pointer rounded-md bg-indigo-950 px-4 py-2  font-semibold text-white transition hover:bg-indigo-900 w-full sm:w-auto"
           >
             Back to Transaction
           </button>

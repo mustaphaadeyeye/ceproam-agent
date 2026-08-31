@@ -51,12 +51,13 @@ const Properties = () => {
   return (
     <div className={`${fontFamily.main}`}>
       <Wrapper>
-        <div className="flex justify-between gap-4">
+        {/* 2 cards per row on mobile, 4 across from xl up */}
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 xl:mt-0 lg:mt-0 mt-12">
           {/* Total Properties */}
           <BackgroundCard rounded="2xl">
-            <div className="py-5 px-6">
+            <div className="py-4 px-4 sm:py-5 sm:px-6">
               <p
-                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}
+                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md} truncate`}
               >
                 Total Properties
               </p>
@@ -79,7 +80,7 @@ const Properties = () => {
                   <ArrowDown size={20} className="text-[#EF4444]" />
                 )}
                 <p
-                  className={`${totalProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm}`}
+                  className={`${totalProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm} truncate`}
                 >
                   {totalProperties.growthRate}% from last month
                 </p>
@@ -89,9 +90,9 @@ const Properties = () => {
 
           {/* Pending Properties */}
           <BackgroundCard rounded="2xl">
-            <div className="py-5 px-6">
+            <div className="py-4 px-4 sm:py-5 sm:px-6">
               <p
-                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}
+                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md} truncate`}
               >
                 Pending Properties
               </p>
@@ -114,7 +115,7 @@ const Properties = () => {
                   <ArrowDown size={20} className="text-[#EF4444]" />
                 )}
                 <p
-                  className={`${pendingProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm}`}
+                  className={`${pendingProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm} truncate`}
                 >
                   {pendingProperties.growthRate}% from last month
                 </p>
@@ -124,9 +125,9 @@ const Properties = () => {
 
           {/* Sold Properties */}
           <BackgroundCard rounded="2xl">
-            <div className="py-5 px-6">
+            <div className="py-4 px-4 sm:py-5 sm:px-6">
               <p
-                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}
+                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md} truncate`}
               >
                 Sold Properties
               </p>
@@ -149,7 +150,7 @@ const Properties = () => {
                   <ArrowDown size={20} className="text-[#EF4444]" />
                 )}
                 <p
-                  className={`${soldProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm}`}
+                  className={`${soldProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm} truncate`}
                 >
                   {soldProperties.growthRate}% from last month
                 </p>
@@ -159,9 +160,9 @@ const Properties = () => {
 
           {/* Available Properties */}
           <BackgroundCard rounded="2xl">
-            <div className="py-5 px-6">
+            <div className="py-4 px-4 sm:py-5 sm:px-6">
               <p
-                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}
+                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md} truncate`}
               >
                 Available Properties
               </p>
@@ -184,7 +185,7 @@ const Properties = () => {
                   <ArrowDown size={20} className="text-[#EF4444]" />
                 )}
                 <p
-                  className={`${availableProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm}`}
+                  className={`${availableProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm} truncate`}
                 >
                   {availableProperties.growthRate}% from last month
                 </p>

@@ -1,10 +1,7 @@
-
 const BackgroundCard = ({
-  width = '330px',
-  height = '142px',
-  rounded = 'lg', 
+  rounded = 'lg',
   bgColor = 'bg-white',
-  shadow = 'shadow-md', 
+  shadow = 'shadow-md',
   children,
   className = '',
   onClick,
@@ -31,8 +28,8 @@ const BackgroundCard = ({
   return (
     <div
       onClick={onClick}
-      style={{ width, height }}
       className={`
+        w-full h-full
         ${bgColor}
         ${roundedMap[rounded] || 'rounded-lg'}
         ${shadowMap[shadow] || 'shadow-md'}

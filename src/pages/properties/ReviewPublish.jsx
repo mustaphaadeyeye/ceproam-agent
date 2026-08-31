@@ -94,14 +94,14 @@ const ReviewPublish = () => {
 
   return (
     <Wrapper>
-      <div className={`py-8 ${fontFamily.main}`}>
-        <div className="bg-white rounded-xl p-8 shadow-sm max-w-3xl mx-auto border border-gray-100">
-          <div className="flex items-center justify-between mb-6">
+      <div className={`py-4 sm:py-8 px-2 sm:px-0 ${fontFamily.main} xl:mt-0 lg:mt-0 mt-12`}>
+        <div className="bg-white rounded-xl p-4 sm:p-8 shadow-sm max-w-3xl mx-auto border border-gray-100">
+          <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
             <div className="flex items-center gap-3">
-              <button onClick={() => navigate(-1)} className="cursor-pointer">
+              <button onClick={() => navigate(-1)} className="cursor-pointer shrink-0">
                 <ArrowLeft size={20} />
               </button>
-              <h2 className="font-semibold text-lg">
+              <h2 className="font-semibold text-base sm:text-lg">
                 Review & Publish Property
               </h2>
             </div>
@@ -112,13 +112,13 @@ const ReviewPublish = () => {
                   `/app/properties-details${propertyId ? `?id=${propertyId}` : ""}`,
                 )
               }
-              className="text-[#182C7A] text-xs font-semibold cursor-pointer hover:underline"
+              className="text-[#182C7A] text-xs font-semibold cursor-pointer hover:underline shrink-0"
             >
               Edit Details
             </button>
           </div>
 
-          <div className="w-full h-64 rounded-xl overflow-hidden mb-8 bg-gray-100">
+          <div className="w-full h-48 sm:h-64 rounded-xl overflow-hidden mb-6 sm:mb-8 bg-gray-100">
             <img
               src={
                 media.cover ||
@@ -129,19 +129,19 @@ const ReviewPublish = () => {
             />
           </div>
 
-          <h3 className="font-semibold text-sm mb-2">
+          <h3 className="font-semibold text-sm mb-2 break-words">
             {property.title || "Property Title"}
           </h3>
-          <p className="text-sm text-gray-500 leading-relaxed mb-6">
+          <p className="text-sm text-gray-500 leading-relaxed mb-6 break-words">
             {property.description || "No description provided."}
           </p>
 
-          <div className="grid grid-cols-2 gap-4 text-sm mb-8 bg-gray-50 p-4 rounded-lg">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm mb-8 bg-gray-50 p-4 rounded-lg">
+            <div className="break-words">
               <span className="text-gray-400">Location:</span>{" "}
               {property.location || "N/A"}
             </div>
-            <div>
+            <div className="break-words">
               <span className="text-gray-400">Price:</span> ₦
               {Number(property.price || 0).toLocaleString()}
             </div>
@@ -155,12 +155,12 @@ const ReviewPublish = () => {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3">
+          <div className="flex flex-col sm:flex-row justify-end gap-3">
             <button
               type="button"
               disabled={isSubmitting}
               onClick={handlePublish}
-              className="bg-[#182C7A] hover:bg-opacity-90 text-white text-sm px-8 h-11 rounded-lg cursor-pointer transition disabled:opacity-50"
+              className="w-full sm:w-auto bg-[#182C7A] hover:bg-opacity-90 text-white text-sm px-8 h-11 rounded-lg cursor-pointer transition disabled:opacity-50"
             >
               {isSubmitting
                 ? "Saving..."

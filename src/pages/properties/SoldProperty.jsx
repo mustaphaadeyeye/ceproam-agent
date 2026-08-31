@@ -33,7 +33,7 @@ const SoldProperty = () => {
 
         {/* Card */}
 
-        <div className="bg-white rounded-xl py-8 px-40">
+        <div className="bg-white rounded-xl py-6 px-4 sm:px-8 md:px-16 xl:py-8 xl:px-40">
 
           {/* Header */}
 <div className="flex items-center justify-between mb-6">
@@ -56,7 +56,7 @@ const SoldProperty = () => {
            
           {/* Hero image */}
 
-          <div className="w-full h-64 rounded-xl overflow-hidden mb-8">
+          <div className="w-full h-48 sm:h-56 xl:h-64 rounded-xl overflow-hidden mb-8">
             <img
               src={property.image}
               alt={property.title}
@@ -80,7 +80,7 @@ const SoldProperty = () => {
             Property Details
           </h3>
 
-          <div className="grid md:grid-cols-2 gap-x-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10">
 
             <div className="flex justify-between py-4 border-t border-gray-100">
               <div>
@@ -146,7 +146,7 @@ const SoldProperty = () => {
             Financial Information
           </h3>
 
-          <div className="grid md:grid-cols-2 gap-x-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10">
 
             <div className="flex justify-between py-4">
               <div>

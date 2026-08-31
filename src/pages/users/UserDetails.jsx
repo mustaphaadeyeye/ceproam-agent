@@ -44,12 +44,12 @@ const UserDetails = () => {
 
   return (
     <Wrapper>
-      <div className={`mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:px-8 ${fontFamily.main}`}>
+      <div className={`mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:px-8 mt-12 lg:mt-0 xl:mt-0 ${fontFamily.main}`}>
 
         {/* Header */}
         <div className="mb-4">
             <div className="flex items-center gap-4">
-                <div> <ArrowLeft size={15} className="cursor-pointer"
+                <div> <ArrowLeft size={15} className="cursor-pointer shrink-0"
                     onClick={() => navigate(-1)}
                 /></div>
                 <div>
@@ -67,7 +67,7 @@ const UserDetails = () => {
           <img
             src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
             alt="Property"
-            className="h-[230px] w-full object-cover sm:h-[300px] lg:h-[360px]"
+            className="h-[200px] w-full object-cover sm:h-[300px] lg:h-[360px]"
           />
         </div>
 

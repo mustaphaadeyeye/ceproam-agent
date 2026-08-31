@@ -51,79 +51,81 @@ export default function RecentProperties() {
           No properties found.
         </div>
       ) : (
-        <table className="w-full">
-          <thead>
-            <tr className="text-left text-xs text-gray-400 border-b border-gray-200">
-              <th className="pb-3">Property</th>
-              <th>Location</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {properties.map((item) => (
-              <tr
-                key={item.id}
-                className="border-b border-gray-200 last:border-none"
-              >
-                <td className="py-4">
-                  <div className="flex gap-3 items-center">
-                    <img
-                      src={
-                        item.coverImage ||
-                        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=100"
-                      }
-                      alt={item.title}
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {item.title}
-                      </p>
-
-                      <p className="text-xs text-gray-400">
-                        {item.subDescription}
-                      </p>
-                    </div>
-                  </div>
-                </td>
-
-                <td className="text-sm text-gray-500">{item.location}</td>
-
-                <td className="text-sm font-medium text-gray-900">
-                  ₦{Number(item.price || 0).toLocaleString()}
-                </td>
-
-                <td>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
-                      item.status,
-                    )}`}
-                  >
-                    {item.status
-                      ? item.status.charAt(0) +
-                        item.status.slice(1).toLowerCase()
-                      : "Available"}
-                  </span>
-                </td>
-
-                <td>
-                  <button
-                    onClick={() =>
-                      navigate(`/app/available-property?id=${item.id}`)
-                    }
-                    className="p-1 hover:bg-gray-100 rounded text-red-500 cursor-pointer transition"
-                  >
-                    <Eye size={16} />
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[560px]">
+            <thead>
+              <tr className="text-left text-xs text-gray-400 border-b border-gray-200">
+                <th className="pb-3">Property</th>
+                <th>Location</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {properties.map((item) => (
+                <tr
+                  key={item.id}
+                  className="border-b border-gray-200 last:border-none"
+                >
+                  <td className="py-4">
+                    <div className="flex gap-3 items-center">
+                      <img
+                        src={
+                          item.coverImage ||
+                          "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=100"
+                        }
+                        alt={item.title}
+                        className="w-12 h-12 rounded-lg object-cover"
+                      />
+
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {item.title}
+                        </p>
+
+                        <p className="text-xs text-gray-400">
+                          {item.subDescription}
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className="text-sm text-gray-500">{item.location}</td>
+
+                  <td className="text-sm font-medium text-gray-900">
+                    ₦{Number(item.price || 0).toLocaleString()}
+                  </td>
+
+                  <td>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                        item.status,
+                      )}`}
+                    >
+                      {item.status
+                        ? item.status.charAt(0) +
+                          item.status.slice(1).toLowerCase()
+                        : "Available"}
+                    </span>
+                  </td>
+
+                  <td>
+                    <button
+                      onClick={() =>
+                        navigate(`/app/available-property?id=${item.id}`)
+                      }
+                      className="p-1 hover:bg-gray-100 rounded text-red-500 cursor-pointer transition"
+                    >
+                      <Eye size={16} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

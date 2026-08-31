@@ -81,7 +81,7 @@ export default function UserTable() {
   const navigate = useNavigate()
 
 const handleViewDetails = (id) => {
-  navigate(`/users/${id}`);
+  navigate(`/app/users/${id}`);
 };
 
   const rows =
@@ -99,8 +99,8 @@ const handleViewDetails = (id) => {
   ];
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-      <div className="mb-5 flex items-center gap-5">
+    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
+      <div className="mb-5 flex flex-wrap items-center gap-3 sm:gap-5">
         <h2 className="text-base font-bold text-indigo-700">{filter}</h2>
         <FilterDropdown selected={filter} onSelect={setFilter} />
       </div>

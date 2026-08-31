@@ -40,7 +40,7 @@ const PendingProperty = () => {
   return (
     <div className={`${fontFamily.main}`}>
       <Wrapper>
-        <div className="flex justify-between gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:flex xl:justify-between gap-4">
           <BackgroundCard rounded="2xl">
             <div className="py-5 px-6">
               <p className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}>
@@ -125,9 +125,9 @@ const PendingProperty = () => {
         {/* Property Verification Checklist */}
         <div className="mt-6">
           
-            <div className="py-6 px-6">
+            <div className="py-6 px-4 sm:px-6">
               {/* Header */}
-              <div className="flex items-start justify-between gap-4 mb-6">
+              <div className="flex flex-col xl:flex-row items-start justify-between gap-4 mb-6">
                 <div>
                   <h2
                     className={`${textColor.primary800} ${fontWeight.semibold} ${fontSize.lg}`}
@@ -147,7 +147,7 @@ const PendingProperty = () => {
                  
                  type="button"
               onClick={() => setIsModalOpen(true)}
-                  className={`bg-red-500 hover:bg-red-600 text-white ${fontWeight.medium} ${fontSize.sm} rounded-lg px-5 py-2.5 whitespace-nowrap transition-colors shrink-0 cursor-pointer`}
+                  className={`bg-red-500 hover:bg-red-600 text-white ${fontWeight.medium} ${fontSize.sm} rounded-lg px-5 py-2.5 whitespace-nowrap transition-colors shrink-0 cursor-pointer w-full xl:w-auto`}
                 >
                   Cancel Sale
                 </button>

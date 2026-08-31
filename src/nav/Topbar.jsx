@@ -26,28 +26,34 @@ const activeIconFilter = {
     "invert(20%) sepia(90%) saturate(5000%) hue-rotate(355deg) brightness(90%)",
 };
 
-const handleNotify = () => {
-  navigate("/notifications");
-};
-
 const Topbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleNotify = () => {
-    navigate("/notification");
+    navigate("/app/notification");
   };
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full  bg-white/90 backdrop-blur-md shadow-lg z-50 ${fontFamily.main}`}
+      className={`fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md shadow-lg z-50 ${fontFamily.main}`}
     >
       <Wrapper>
         <div className="h-16 xl:h-18 flex items-center justify-between">
           {/* Left */}
           <div className="flex items-center gap-4 xl:gap-14">
-            {/* Logo */}
-            <div className="flex items-center">
+            {/* Hamburger - shows in place of the logo below xl */}
+            <button
+              type="button"
+              aria-label="Toggle menu"
+              onClick={() => setMobileOpen((prev) => !prev)}
+              className="xl:hidden text-[#05062F]"
+            >
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+
+            {/* Logo - only shows at xl and above */}
+            <div className="hidden xl:flex items-center">
               <img
                 src={Logo}
                 alt="Ceproam"
@@ -69,7 +75,6 @@ const Topbar = () => {
                           filter: isActive ? activeIconFilter.filter : "none",
                         }}
                       />
-
                       <span
                         className={`text-[15px] font-normal whitespace-nowrap ${
                           isActive ? "text-[#EC2614]" : "text-[#05062F]"
@@ -96,15 +101,6 @@ const Topbar = () => {
                 rounded="lg"
               />
             </div>
-
-            {/* Search icon trigger - below lg (iPad mini + mobile) */}
-            <button
-              type="button"
-              aria-label="Search"
-              className="lg:hidden text-[#05062F]"
-            >
-              <Search size={20} />
-            </button>
 
             <div className="relative cursor-pointer">
               <Bell
@@ -136,16 +132,6 @@ const Topbar = () => {
                 className="w-8 h-8 rounded-full object-cover"
               />
             </div>
-
-            {/* Hamburger - shown for iPad Pro (lg), iPad mini (md), and mobile; hidden at xl */}
-            <button
-              type="button"
-              aria-label="Toggle menu"
-              onClick={() => setMobileOpen((prev) => !prev)}
-              className="xl:hidden text-[#05062F] ml-1"
-            >
-              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
           </div>
         </div>
 

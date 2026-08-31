@@ -73,13 +73,13 @@ const DashboardLayout = () => {
   return (
     <div className={`${fontFamily.main}`}>
       <Wrapper>
-        {/* Top Metric Cards with SaaS breathing animation during loading */}
-        <div className="flex justify-between gap-4">
+        {/* Top Metric Cards - 2 per row on mobile, 4 per row from xl up */}
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 xl:mt-0 lg:mt-0 mt-12">
           {/* Total Properties */}
           <BackgroundCard rounded="2xl">
-            <div className="py-5 px-6">
+            <div className="py-4 px-4 sm:py-5 sm:px-6">
               <p
-                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}
+                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md} truncate`}
               >
                 Total Properties
               </p>
@@ -102,7 +102,7 @@ const DashboardLayout = () => {
                   <ArrowDown size={20} className="text-[#EF4444]" />
                 )}
                 <p
-                  className={`${totalProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm}`}
+                  className={`${totalProperties.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm} truncate`}
                 >
                   {totalProperties.growthRate}% from last month
                 </p>
@@ -112,9 +112,9 @@ const DashboardLayout = () => {
 
           {/* Active Investments */}
           <BackgroundCard rounded="2xl">
-            <div className="py-5 px-6">
+            <div className="py-4 px-4 sm:py-5 sm:px-6">
               <p
-                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}
+                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md} truncate`}
               >
                 Active Investments
               </p>
@@ -137,7 +137,7 @@ const DashboardLayout = () => {
                   <ArrowDown size={20} className="text-[#EF4444]" />
                 )}
                 <p
-                  className={`${activeInvestments.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm}`}
+                  className={`${activeInvestments.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm} truncate`}
                 >
                   {activeInvestments.growthRate}% from last month
                 </p>
@@ -147,9 +147,9 @@ const DashboardLayout = () => {
 
           {/* Total Users */}
           <BackgroundCard rounded="2xl">
-            <div className="py-5 px-6">
+            <div className="py-4 px-4 sm:py-5 sm:px-6">
               <p
-                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}
+                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md} truncate`}
               >
                 Total Users
               </p>
@@ -172,7 +172,7 @@ const DashboardLayout = () => {
                   <ArrowDown size={20} className="text-[#EF4444]" />
                 )}
                 <p
-                  className={`${totalUsers.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm}`}
+                  className={`${totalUsers.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm} truncate`}
                 >
                   {totalUsers.growthRate}% from last month
                 </p>
@@ -182,9 +182,9 @@ const DashboardLayout = () => {
 
           {/* Monthly Revenue */}
           <BackgroundCard rounded="2xl">
-            <div className="py-5 px-6">
+            <div className="py-4 px-4 sm:py-5 sm:px-6">
               <p
-                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}
+                className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md} truncate`}
               >
                 Monthly Revenue
               </p>
@@ -211,7 +211,7 @@ const DashboardLayout = () => {
                   <ArrowDown size={20} className="text-[#EF4444]" />
                 )}
                 <p
-                  className={`${monthlyRevenue.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm}`}
+                  className={`${monthlyRevenue.isIncrease ? textColor.success : textColor.danger} ${fontWeight.normal} ${fontSize.sm} truncate`}
                 >
                   {monthlyRevenue.growthRate}% from last month
                 </p>
@@ -220,13 +220,13 @@ const DashboardLayout = () => {
           </BackgroundCard>
         </div>
 
-        {/* Charts Section */}
-        <div className="flex gap-4 w-full mt-8">
-          <div className="w-1/2">
+        {/* Charts Section - stacked on mobile, side by side from lg up */}
+        <div className="flex flex-col lg:flex-row gap-4 w-full mt-8">
+          <div className="w-full lg:w-1/2">
             <RevenueChart />
           </div>
 
-          <div className="w-1/2">
+          <div className="w-full lg:w-1/2">
             <PropertyChart />
           </div>
         </div>

@@ -22,34 +22,42 @@ const FilterBar = ({
   }
 
   return (
-    <div className="flex items-center justify-between w-full px-4 py-3 bg-white border border-gray-200 rounded-xl">
+    <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between w-full gap-3 px-4 py-3 bg-white border border-gray-200 rounded-xl">
       {/* Left: search + filters */}
-      <div className="flex items-center gap-3">
-        <SearchInput
-          icon={Search}
-          placeholder={searchPlaceholder}
-          width="240px"
-          height="40px"
-          onChange={onSearchChange}
-        />
-        <DropdownInput
-          items={statusItems}
-          placeholder="All Status"
-          width="130px"
-          height="40px"
-          onChange={onStatusChange}
-        />
-        <DropdownInput
-          items={typeItems}
-          placeholder="All Types"
-          width="130px"
-          height="40px"
-          onChange={onTypeChange}
-        />
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
+        <div className="w-full sm:w-[240px]">
+          <SearchInput
+            icon={Search}
+            placeholder={searchPlaceholder}
+            width="100%"
+            height="40px"
+            onChange={onSearchChange}
+          />
+        </div>
+        <div className="flex gap-3">
+          <div className="w-full sm:w-[130px]">
+            <DropdownInput
+              items={statusItems}
+              placeholder="All Status"
+              width="100%"
+              height="40px"
+              onChange={onStatusChange}
+            />
+          </div>
+          <div className="w-full sm:w-[130px]">
+            <DropdownInput
+              items={typeItems}
+              placeholder="All Types"
+              width="100%"
+              height="40px"
+              onChange={onTypeChange}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Right: filter + view toggle */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between xl:justify-start gap-4">
         <button
           onClick={onFilterClick}
           className="text-gray-400 hover:text-gray-600 transition-colors"

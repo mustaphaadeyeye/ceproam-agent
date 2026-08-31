@@ -12,9 +12,9 @@ import Usertable from "../users/UserTable"
 
 const UserLayout = () => {
   return (
-    <div>
+    <div className='xl:mt-0 lg:mt-0 mt-12'>
         <Wrapper>
-         <div className='flex justify-between gap-4'>
+         <div className='grid grid-cols-1 sm:grid-cols-2 xl:flex xl:justify-between gap-4'>
         <BackgroundCard rounded='2xl'>
           <div className='py-5 px-6'>
             <p className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}>Total Properties</p>
