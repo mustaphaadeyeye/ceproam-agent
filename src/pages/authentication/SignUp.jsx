@@ -2,13 +2,11 @@ import React, { useMemo, useState } from "react";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/newcep.png";
-import Button from "../../components/Button";
-import {
-  fontSize,
-  fontWeight,
-  fontFamily,
-  textColor,
-} from "../../styles/theme";
+import Button from "../../components/buttons/Button";
+import GlobalLoader from "../../components/loaders/GlobalLoader";
+import GlobalModal from "../../components/modals/GlobalModal";
+import { fontFamily } from "../../components/styles/theme";
+import { useSignup } from "../../hooks/auth/useSignup";
 import Face from "../../assets/icons/faceid.png";
 
 const NIGERIAN_STATES = [
@@ -57,7 +55,40 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [skipFaceCapture, setSkipFaceCapture] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    type: "success",
+    title: "",
+    message: "",
+  });
   const navigate = useNavigate();
+
+  const {
+    mutate,
+    isPending: isLoading,
+    error: backendError,
+    reset: resetMutation,
+  } = useSignup(
+    () => {
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        title: "Agent account created",
+        message:
+          "Your agent partner account has been created successfully. Please log in to continue.",
+      });
+      resetMutation();
+    },
+    (message) => {
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        title: "Signup failed",
+        message,
+      });
+      resetMutation();
+    },
+  );
 
   const [localErrors, setLocalErrors] = useState({});
   const [form, setForm] = useState({
@@ -68,7 +99,7 @@ const SignUp = () => {
     referralCode: "",
     occupation: "",
     state: "",
-    role: "AGENT", // 🔒 Set to AGENT by default and hidden from UI
+    role: "AGENT", // 🔒 Hardcoded strictly to AGENT for partner portal
     password: "",
     confirmPassword: "",
     nin: "",
@@ -82,8 +113,57 @@ const SignUp = () => {
       setLocalErrors((p) => ({ ...p, [name]: undefined, _global: undefined }));
   };
 
+  const backendFieldErrors = useMemo(() => {
+    const map = {};
+    const data = backendError?.response?.data;
+    if (!data) return map;
+    const push = (field, msg) => {
+      if (!msg) return;
+      map[field] = map[field] ? [...map[field], msg] : [msg];
+    };
+    if (
+      data.message &&
+      typeof data.message === "object" &&
+      !Array.isArray(data.message)
+    ) {
+      Object.entries(data.message).forEach(([k, v]) => {
+        if (Array.isArray(v)) v.forEach((x) => push(k, x));
+        else push(k, v);
+      });
+    }
+    const errors = data.errors || data.error;
+    if (Array.isArray(errors)) {
+      errors.forEach((e) => {
+        if (typeof e === "string") {
+          const parts = e.split(":");
+          if (parts.length > 1)
+            push(parts[0].trim(), parts.slice(1).join(":").trim());
+          else map._global = map._global ? [...map._global, e] : [e];
+        } else if (e.param || e.field) {
+          push(e.param || e.field, e.msg || e.message || JSON.stringify(e));
+        } else if (e.msg) {
+          map._global = map._global ? [...map._global, e.msg] : [e.msg];
+        }
+      });
+    } else if (errors && typeof errors === "object") {
+      Object.entries(errors).forEach(([k, v]) => {
+        if (Array.isArray(v)) v.forEach((x) => push(k, x));
+        else push(k, v);
+      });
+    }
+    if (data.message && typeof data.message === "string")
+      map._global = map._global
+        ? [...map._global, data.message]
+        : [data.message];
+    return map;
+  }, [backendError]);
+
   const getFieldError = (fieldName) => {
     if (localErrors && localErrors[fieldName]) return localErrors[fieldName];
+    if (backendFieldErrors && backendFieldErrors[fieldName])
+      return Array.isArray(backendFieldErrors[fieldName])
+        ? backendFieldErrors[fieldName].join(". ")
+        : backendFieldErrors[fieldName];
     return null;
   };
 
@@ -216,13 +296,16 @@ const SignUp = () => {
       occupation: form.occupation.trim(),
       state: form.state,
       referralCode: form.referralCode.trim() || undefined,
-      role: "AGENT", // 🔒 Explicitly locked to AGENT role for partner portal
+      role: "AGENT", // 🔒 Strictly forced to AGENT role
       nin: form.nin?.trim() || "",
       faceCaptureUrl: form.faceCaptureUrl || "",
     };
+    mutate(payload);
+  };
 
-    console.log("Agent Signup Payload:", payload);
-    navigate("/");
+  const closeModal = () => {
+    setModalConfig((p) => ({ ...p, isOpen: false }));
+    if (modalConfig.type === "success") navigate("/");
   };
 
   return (
@@ -256,10 +339,10 @@ const SignUp = () => {
                     navigate("/");
                   }
                 }}
-                className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-gray-600"
+                className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-gray-600 cursor-pointer"
                 aria-label="Back"
               >
-                <ArrowLeft size={12} />
+                <ArrowLeft size={16} />
               </button>
             ) : (
               <div />
@@ -268,7 +351,7 @@ const SignUp = () => {
               <button
                 type="button"
                 onClick={handleSkipKyc}
-                className="text-[#2540A8] text-sm font-semibold"
+                className="text-[#2540A8] text-sm font-semibold cursor-pointer"
               >
                 Skip
               </button>
@@ -392,8 +475,12 @@ const SignUp = () => {
                     id="terms"
                     checked={agreed}
                     onChange={(e) => setAgreed(e.target.checked)}
+                    className="cursor-pointer"
                   />
-                  <label htmlFor="terms" className="text-sm text-[#6B7280]">
+                  <label
+                    htmlFor="terms"
+                    className="text-sm text-[#6B7280] cursor-pointer"
+                  >
                     I agree to the Terms & Conditions
                   </label>
                 </div>
@@ -455,9 +542,9 @@ const SignUp = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-gray-500"
+                    className="absolute right-3 top-3 text-gray-500 cursor-pointer"
                   >
-                    {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+                    {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                   </button>
                 </div>
 
@@ -476,12 +563,12 @@ const SignUp = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-3 text-gray-500"
+                    className="absolute right-3 top-3 text-gray-500 cursor-pointer"
                   >
                     {showConfirmPassword ? (
-                      <Eye size={16} />
+                      <Eye size={18} />
                     ) : (
-                      <EyeOff size={16} />
+                      <EyeOff size={18} />
                     )}
                   </button>
                 </div>
@@ -509,7 +596,7 @@ const SignUp = () => {
                 <div className="mt-6">
                   <button
                     type="submit"
-                    className="w-full h-12 bg-[#02024D] text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full h-12 bg-[#02024D] text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     disabled={isActionDisabled}
                   >
                     Continue
@@ -546,13 +633,13 @@ const SignUp = () => {
                 <div className="mt-6">
                   <Button
                     type="submit"
-                    text="Create Account"
-                    bgColor="bg-[#02024D]"
-                    width="100%"
-                    height="48px"
-                    rounded="md"
-                    className="text-white"
-                    disabled={isActionDisabled}
+                    text={isLoading ? "Creating account..." : "Create Account"}
+                    bg="bg-[#02024D]"
+                    width="w-full"
+                    height="h-12"
+                    rounded="rounded-md"
+                    className="text-white cursor-pointer"
+                    disabled={isActionDisabled || isLoading}
                   />
                 </div>
               </>
@@ -564,18 +651,18 @@ const SignUp = () => {
                   <Button
                     type="submit"
                     text="Continue"
-                    bgColor="bg-[#02024D]"
-                    width="100%"
-                    height="48px"
-                    rounded="md"
-                    className="text-white"
-                    disabled={isActionDisabled}
+                    bg="bg-[#02024D]"
+                    width="w-full"
+                    height="h-12"
+                    rounded="rounded-md"
+                    className="text-white cursor-pointer"
+                    disabled={isActionDisabled || isLoading}
                   />
                 </div>
 
                 <button
                   type="button"
-                  className="w-full h-12 border rounded-md mt-3 flex items-center justify-center gap-3 text-sm"
+                  className="w-full h-12 border rounded-md mt-3 flex items-center justify-center gap-3 text-sm cursor-pointer hover:bg-gray-50 transition"
                   onClick={() => {}}
                 >
                   <img
@@ -590,7 +677,7 @@ const SignUp = () => {
                   Already have an account?{" "}
                   <span
                     onClick={() => navigate("/")}
-                    className="text-[#3658C9] font-medium cursor-pointer"
+                    className="text-[#3658C9] font-medium cursor-pointer hover:underline"
                   >
                     Login
                   </span>
@@ -600,6 +687,19 @@ const SignUp = () => {
           </form>
         </div>
       </div>
+
+      {isLoading && <GlobalLoader label="Creating your agent account" />}
+
+      <GlobalModal
+        isOpen={modalConfig.isOpen}
+        onClose={closeModal}
+        type={modalConfig.type}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        confirmText={
+          modalConfig.type === "success" ? "Go to Login" : "Try Again"
+        }
+      />
     </div>
   );
 };
