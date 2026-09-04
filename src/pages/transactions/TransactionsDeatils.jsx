@@ -2,7 +2,12 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TRANSACTIONS, formatNaira } from "../transactions/Transactionsdata";
 import Wrapper from "../../components/Wrapper";
-import { fontSize, fontWeight, fontFamily, textColor } from "../../styles/theme";
+import {
+  fontSize,
+  fontWeight,
+  fontFamily,
+  textColor,
+} from "../../styles/theme";
 
 const TransactionsDeatils = () => {
   const { id } = useParams();
@@ -15,7 +20,7 @@ const TransactionsDeatils = () => {
       <Wrapper>
         <div className="py-10">
           <p className="mb-4 text-sm text-gray-500">
-            We couldn't find a transaction with reference "{id}".
+            We could not find a transaction with reference "{id}".
           </p>
 
           <button
@@ -29,10 +34,7 @@ const TransactionsDeatils = () => {
     );
   }
 
-  const cleanDate = transaction.date.replace(
-    /(\d+)(st|nd|rd|th)/,
-    "$1"
-  );
+  const cleanDate = transaction.date.replace(/(\d+)(st|nd|rd|th)/, "$1");
 
   return (
     <Wrapper>
@@ -48,20 +50,14 @@ const TransactionsDeatils = () => {
           <div className="grid grid-cols-2 border-t border-gray-100">
             {/* Transaction Type */}
             <div className="border-b border-gray-100 py-3">
-              <p className=" font-medium text-gray-400">
-                Transaction Type
-              </p>
+              <p className=" font-medium text-gray-400">Transaction Type</p>
 
-              <p className=" text-gray-800">
-                {transaction.type}
-              </p>
+              <p className=" text-gray-800">{transaction.type}</p>
             </div>
 
             {/* Amount */}
             <div className="border-b border-gray-100 py-3">
-              <p className=" font-medium text-gray-400">
-                Amount
-              </p>
+              <p className=" font-medium text-gray-400">Amount</p>
 
               <p className=" text-gray-800">
                 {formatNaira(transaction.amount)}
@@ -73,24 +69,16 @@ const TransactionsDeatils = () => {
           <div className="grid grid-cols-2">
             {/* Date */}
             <div className="border-b border-gray-100 py-3">
-              <p className=" font-medium text-gray-400">
-                Date
-              </p>
+              <p className=" font-medium text-gray-400">Date</p>
 
-              <p className=" text-gray-800">
-                {cleanDate}
-              </p>
+              <p className=" text-gray-800">{cleanDate}</p>
             </div>
 
             {/* Status */}
             <div className="border-b border-gray-100 py-3">
-              <p className=" font-medium text-gray-400">
-                Status
-              </p>
+              <p className=" font-medium text-gray-400">Status</p>
 
-              <p className=" text-gray-800">
-                {transaction.status}
-              </p>
+              <p className=" text-gray-800">{transaction.status}</p>
             </div>
           </div>
 
@@ -98,24 +86,16 @@ const TransactionsDeatils = () => {
           <div className="grid grid-cols-2">
             {/* Notes */}
             <div className="border-b border-gray-100 py-3">
-              <p className=" font-medium text-gray-400">
-                Notes
-              </p>
+              <p className=" font-medium text-gray-400">Notes</p>
 
-              <p className=" text-gray-800">
-                {transaction.notes}
-              </p>
+              <p className=" text-gray-800">{transaction.notes}</p>
             </div>
 
             {/* Reference */}
             <div className="border-b border-gray-100 py-3">
-              <p className=" font-medium text-gray-400">
-                Reference
-              </p>
+              <p className=" font-medium text-gray-400">Reference</p>
 
-              <p className=" text-gray-800">
-                {transaction.id}
-              </p>
+              <p className=" text-gray-800">{transaction.id}</p>
             </div>
           </div>
         </div>
