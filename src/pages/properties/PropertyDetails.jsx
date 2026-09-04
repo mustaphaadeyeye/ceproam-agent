@@ -7,6 +7,35 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../api/axios";
 
+const PROPERTY_TYPES = [
+  { label: "Residential", value: "RESIDENTIAL" },
+  { label: "Serviced", value: "SERVICED" },
+  { label: "Lodging", value: "LODGING" },
+  { label: "Commercial", value: "COMMERCIAL" },
+  { label: "Land", value: "LAND" },
+  { label: "Plantation", value: "PLANTATION" },
+  { label: "Industrial", value: "INDUSTRIAL" },
+];
+
+const PROPERTY_FEATURES = [
+  { label: "Balcony", value: "BALCONY" },
+  { label: "Lift", value: "LIFT" },
+  { label: "Garden", value: "GARDEN" },
+  { label: "Parking", value: "PARKING" },
+  { label: "Gym", value: "GYM" },
+  { label: "Pool", value: "POOL" },
+  { label: "Security", value: "SECURITY" },
+  { label: "Furnished", value: "FURNISHED" },
+  { label: "Community", value: "COMMUNITY" },
+  { label: "Swimming Pool", value: "SWIMMING_POOL" },
+  { label: "Internet", value: "INTERNET" },
+  { label: "Air Conditioning", value: "AC" },
+  { label: "Heater", value: "HEATER" },
+  { label: "Kitchen", value: "KITCHEN" },
+  { label: "Laundry", value: "LAUNDRY" },
+  { label: "Storage", value: "STORAGE" },
+];
+
 const PropertyDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -25,7 +54,7 @@ const PropertyDetails = () => {
 
   const [form, setForm] = useState({
     title: "",
-    category: "Residential",
+    category: "SALE",
     status: "ACTIVE",
     price: "",
     bedrooms: 3,
@@ -33,7 +62,8 @@ const PropertyDetails = () => {
     area: 250,
     description: "",
     location: "",
-    listingType: "SALE",
+    types: ["RESIDENTIAL"],
+    features: [],
   });
 
   // Populate form when existing property data loads
@@ -41,7 +71,7 @@ const PropertyDetails = () => {
     if (existingProperty) {
       setForm({
         title: existingProperty.title || "",
-        category: existingProperty.category || "Residential",
+        category: existingProperty.category || "SALE",
         status: existingProperty.status || "ACTIVE",
         price: existingProperty.price || "",
         bedrooms: existingProperty.bedrooms ?? 3,
@@ -49,9 +79,9 @@ const PropertyDetails = () => {
         area: existingProperty.area ?? 250,
         description: existingProperty.description || "",
         location: existingProperty.location || "",
-        listingType: existingProperty.listingType || "SALE",
+        types: existingProperty.types || ["RESIDENTIAL"],
+        features: existingProperty.features || [],
       });
-
       sessionStorage.setItem(
         "edit_existing_media",
         JSON.stringify({
@@ -68,7 +98,23 @@ const PropertyDetails = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "types") {
+      setForm((prev) => ({ ...prev, types: [value] }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleFeatureToggle = (featureValue) => {
+    setForm((prev) => {
+      const exists = prev.features.includes(featureValue);
+      return {
+        ...prev,
+        features: exists
+          ? prev.features.filter((f) => f !== featureValue)
+          : [...prev.features, featureValue],
+      };
+    });
   };
 
   const handleMediaUpload = () => {
@@ -157,7 +203,7 @@ const PropertyDetails = () => {
               {/* Category */}
               <div className="min-w-0">
                 <label className="text-sm font-medium block mb-2">
-                  Category
+                  Category (Listing Classification)
                 </label>
 
                 <select
@@ -166,53 +212,29 @@ const PropertyDetails = () => {
                   onChange={handleChange}
                   className="w-full bg-[#F7F9FC] rounded-lg h-11 sm:h-12 px-4 outline-none text-sm cursor-pointer"
                 >
-                  <option value="Residential">Residential</option>
-                  <option value="Commercial">Commercial</option>
-                  <option value="Land">Land</option>
+                  <option value="SALE">For Sale</option>
+                  <option value="RENT">For Rent</option>
+                  <option value="LEASE">Lease</option>
                 </select>
               </div>
 
               {/* Listing Type */}
               <div className="min-w-0">
                 <label className="text-sm font-medium block mb-2">
-                  Listing Type
+                  Property Type
                 </label>
-
-                <div className="grid grid-cols-2 bg-[#F7F9FC] rounded-lg p-1">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm((p) => ({
-                        ...p,
-                        listingType: "SALE",
-                      }))
-                    }
-                    className={`h-9 sm:h-10 rounded-lg text-xs sm:text-sm transition cursor-pointer ${
-                      form.listingType === "SALE"
-                        ? "bg-[#182C7A] text-white"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    For Sale
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm((p) => ({
-                        ...p,
-                        listingType: "RENT",
-                      }))
-                    }
-                    className={`h-9 sm:h-10 rounded-lg text-xs sm:text-sm transition cursor-pointer ${
-                      form.listingType === "RENT"
-                        ? "bg-[#182C7A] text-white"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    For Rent
-                  </button>
-                </div>
+                <select
+                  name="types"
+                  value={form.types[0] || "RESIDENTIAL"}
+                  onChange={handleChange}
+                  className="w-full bg-[#F7F9FC] rounded-lg h-12 px-4 outline-none text-sm cursor-pointer"
+                >
+                  {PROPERTY_TYPES.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -275,8 +297,33 @@ const PropertyDetails = () => {
               </div>
             </div>
 
-            {/* Description */}
-            <div className="mb-7 sm:mb-8">
+            {/* Property Features Selection */}
+            <div className="mb-6">
+              <label className="text-sm font-medium block mb-3">
+                Property Features & Amenities
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {PROPERTY_FEATURES.map((feature) => {
+                  const isSelected = form.features.includes(feature.value);
+                  return (
+                    <button
+                      key={feature.value}
+                      type="button"
+                      onClick={() => handleFeatureToggle(feature.value)}
+                      className={`h-11 px-3 rounded-lg text-xs font-medium border transition cursor-pointer flex items-center justify-center ${
+                        isSelected
+                          ? "bg-[#182C7A] text-white border-[#182C7A]"
+                          : "bg-[#F7F9FC] text-gray-600 border-gray-200 hover:bg-gray-100"
+                      }`}
+                    >
+                      {feature.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mb-8">
               <label className="text-sm font-medium block mb-2">
                 Description
               </label>
@@ -333,7 +380,7 @@ const PropertyDetails = () => {
             {/* Listing + Status */}
             <div className="flex justify-between items-center gap-3 mt-5 text-xs">
               <span className="text-[#182C7A] font-medium">
-                ● For {form.listingType}
+                ● For {form.category} ({form.types[0]})
               </span>
 
               <span className="text-[#05062F]">

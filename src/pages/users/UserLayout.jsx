@@ -60,7 +60,7 @@ const UserLayout = () => {
                 >
                   {isMetricsLoading
                     ? "..."
-                    : (metrics?.totalProperties ?? 1247).toLocaleString()}
+                    : (metrics?.totalProperties ?? 0).toLocaleString()}
                 </h1>
                 <IconBg icon={TotalIcon} iconSize={18} />
               </div>
@@ -70,7 +70,7 @@ const UserLayout = () => {
                 <p
                   className={`${textColor.success} ${fontWeight.normal} ${fontSize.sm}`}
                 >
-                  12% from last month
+                  From last month
                 </p>
               </div>
             </div>
@@ -89,7 +89,7 @@ const UserLayout = () => {
                 >
                   {isMetricsLoading
                     ? "..."
-                    : (metrics?.activeProperties ?? 1007).toLocaleString()}
+                    : (metrics?.activeProperties ?? 0).toLocaleString()}
                 </h1>
                 <IconBg icon={ActIcon} iconSize={18} bgColor="bg-yellow-100" />
               </div>
@@ -98,7 +98,7 @@ const UserLayout = () => {
                 <p
                   className={`${textColor.success} ${fontWeight.normal} ${fontSize.sm}`}
                 >
-                  8.5% from last month
+                  From last month
                 </p>
               </div>
             </div>
@@ -117,7 +117,7 @@ const UserLayout = () => {
                 >
                   {isMetricsLoading
                     ? "..."
-                    : (metrics?.inactiveProperties ?? 240).toLocaleString()}
+                    : (metrics?.inactiveProperties ?? 0).toLocaleString()}
                 </h1>
                 <IconBg icon={UserIcon} iconSize={18} bgColor="bg-red-200" />
               </div>
@@ -126,7 +126,7 @@ const UserLayout = () => {
                 <p
                   className={`${textColor.success} ${fontWeight.normal} ${fontSize.sm}`}
                 >
-                  8.5% from last month
+                  From last month
                 </p>
               </div>
             </div>
@@ -144,7 +144,7 @@ const UserLayout = () => {
                 >
                   {isMetricsLoading
                     ? "..."
-                    : (metrics?.totalUsers ?? 15432).toLocaleString()}
+                    : (metrics?.totalUsers ?? 0).toLocaleString()}
                 </h1>
                 <IconBg icon={NairaIcon} iconSize={18} bgColor="bg-green-100" />
               </div>
@@ -153,7 +153,7 @@ const UserLayout = () => {
                 <p
                   className={`${textColor.success} ${fontWeight.normal} ${fontSize.sm}`}
                 >
-                  15.3% from last month
+                  From last month
                 </p>
               </div>
             </div>
