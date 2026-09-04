@@ -72,15 +72,9 @@ export default function UserTable() {
   const [filter, setFilter] = useState("All Users");
   const navigate = useNavigate();
 
-<<<<<<< HEAD
-const handleViewDetails = (id) => {
-  navigate(`/app/users/${id}`);
-};
-=======
   const handleViewDetails = (id) => {
     navigate(`/app/users/${id}`);
   };
->>>>>>> ddfe2af739da4db3c3d922c9e4a6c708d715de04
 
   // Fetch filtered users dynamically from the backend endpoint
   const { data: rows = [], isLoading } = useQuery({

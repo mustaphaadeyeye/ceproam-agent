@@ -28,22 +28,6 @@ const UserLayout = () => {
   });
 
   return (
-<<<<<<< HEAD
-    <div className='xl:mt-0 lg:mt-0 mt-12'>
-        <Wrapper>
-         <div className='grid grid-cols-1 sm:grid-cols-2 xl:flex xl:justify-between gap-4'>
-        <BackgroundCard rounded='2xl'>
-          <div className='py-5 px-6'>
-            <p className={`${textColor.primary} ${fontWeight.normal} ${fontSize.md}`}>Total Properties</p>
-            <div className='flex justify-between mt-2'>
-                <h1 className={`${textColor.primary800} ${fontWeight.normal} ${fontSize['3xl']}`}>1,247</h1>
-                <IconBg
-                icon={TotalIcon}
-                iconSize={18}
-                />
-            </div>
-            <div className='flex items-center gap-1'>
-=======
     <div>
       <Wrapper>
         <div className="flex justify-between gap-4">
@@ -65,7 +49,6 @@ const UserLayout = () => {
                 <IconBg icon={TotalIcon} iconSize={18} />
               </div>
               <div className="flex items-center gap-1">
->>>>>>> ddfe2af739da4db3c3d922c9e4a6c708d715de04
                 <ArrowUp size={20} className="text-[#22C55E]" />
                 <p
                   className={`${textColor.success} ${fontWeight.normal} ${fontSize.sm}`}

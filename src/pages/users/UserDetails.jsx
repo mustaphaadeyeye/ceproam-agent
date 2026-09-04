@@ -72,19 +72,6 @@ const UserDetails = () => {
 
   return (
     <Wrapper>
-<<<<<<< HEAD
-      <div className={`mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:px-8 mt-12 lg:mt-0 xl:mt-0 ${fontFamily.main}`}>
-
-        {/* Header */}
-        <div className="mb-4">
-            <div className="flex items-center gap-4">
-                <div> <ArrowLeft size={15} className="cursor-pointer shrink-0"
-                    onClick={() => navigate(-1)}
-                /></div>
-                <div>
-                    <h1 className="font-bold  text-[#171212]">George A. James</h1>
-                </div>
-=======
       <div
         className={`mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:px-8 ${fontFamily.main}`}
       >
@@ -103,34 +90,15 @@ const UserDetails = () => {
               <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
                 <Calendar size={12} /> Joined on {user.dateJoined}
               </p>
->>>>>>> ddfe2af739da4db3c3d922c9e4a6c708d715de04
             </div>
           </div>
         </div>
 
-<<<<<<< HEAD
-        {/* Property Image */}
-        <div className="overflow-hidden rounded-md">
-          <img
-            src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
-            alt="Property"
-            className="h-[200px] w-full object-cover sm:h-[300px] lg:h-[360px]"
-          />
-=======
         {/* User Info Card / Summary */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-8 grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold">
               {user.name?.charAt(0) || "U"}
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Full Name</p>
-              <p className="text-sm font-semibold text-gray-800">{user.name}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600">
-              <Mail size={18} />
             </div>
             <div>
               <p className="text-xs text-gray-400">Email Address</p>
@@ -150,7 +118,6 @@ const UserDetails = () => {
               </p>
             </div>
           </div>
->>>>>>> ddfe2af739da4db3c3d922c9e4a6c708d715de04
         </div>
 
         {/* Optional Property Showcase if User has Properties */}
@@ -162,9 +129,7 @@ const UserDetails = () => {
             <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
               <img
                 src={
-                  primaryProperty.coverImage ||
-                  primaryProperty.images?.[0] ||
-                  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+                  primaryProperty.coverImage
                 }
                 alt="Property"
                 className="h-[230px] w-full object-cover sm:h-[280px]"
