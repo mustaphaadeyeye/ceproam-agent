@@ -7,10 +7,11 @@ import transactionIcon from "../assets/icons/transactionicon.png";
 import settingsIcon from "../assets/icons/seticon.png";
 import SearchInput from "../inputs/SearchInput";
 import { Bell, Search, ChevronDown, Menu, X } from "lucide-react";
-import Jimage from "../assets/images/jimage.png";
+import Jimage from "../assets/images/profile.png";
 import Wrapper from "../components/Wrapper";
 import { fontFamily } from "../styles/theme";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useProfile } from "../hooks/profile/useProfile";
 
 const navItems = [
   { label: "Dashboard", icon: DashImg, path: "/app" },
@@ -26,21 +27,20 @@ const activeIconFilter = {
     "invert(20%) sepia(90%) saturate(5000%) hue-rotate(355deg) brightness(90%)",
 };
 
-const handleNotify = () => {
-  navigate("/notifications");
-};
-
 const Topbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
 
+  const { data: user } = useProfile();
+  const userAvatar = user?.faceCaptureUrl || Jimage;
+
   const handleNotify = () => {
-    navigate("/notification");
+    navigate("/app/notifications");
   };
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full  bg-white/90 backdrop-blur-md shadow-lg z-50 ${fontFamily.main}`}
+      className={`fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md shadow-lg z-50 ${fontFamily.main}`}
     >
       <Wrapper>
         <div className="h-16 xl:h-18 flex items-center justify-between">
@@ -58,7 +58,11 @@ const Topbar = () => {
             {/* Navigation - full desktop only, xl and above */}
             <nav className="hidden xl:flex items-center gap-5">
               {navItems.map((item) => (
-                <NavLink key={item.path} to={item.path}>
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  end={item.path === "/app"} // 👈 Ensures Dashboard only matches exact /app route
+                >
                   {({ isActive }) => (
                     <div className="flex items-center gap-2 cursor-pointer transition duration-200">
                       <img
@@ -112,17 +116,14 @@ const Topbar = () => {
                 className="text-[#05062F] hover:scale-105 transition"
                 onClick={handleNotify}
               />
-
-              {/* <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center w-4 h-4 text-[10px] font-semibold text-white bg-[#EC2614] rounded-full">
-                2
-              </span> */}
             </div>
 
             <div className="hidden sm:flex items-center gap-2 cursor-pointer">
               <img
-                src={Jimage}
+                src={userAvatar}
                 alt="User avatar"
-                className="w-9 h-9 rounded-full object-cover"
+                onClick={() => navigate("/app/settings")}
+                className="w-9 h-9 rounded-full object-cover border border-gray-200"
               />
 
               <ChevronDown size={16} className="text-[#05062F]" />
@@ -131,9 +132,9 @@ const Topbar = () => {
             {/* Avatar only, no chevron, on very small screens */}
             <div className="sm:hidden">
               <img
-                src={Jimage}
+                src={userAvatar}
                 alt="User avatar"
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover border border-gray-200"
               />
             </div>
 
@@ -156,6 +157,7 @@ const Topbar = () => {
               <NavLink
                 key={item.path}
                 to={item.path}
+                end={item.path === "/app"} // 👈 Ensures exact match behavior on mobile dropdown too
                 onClick={() => setMobileOpen(false)}
               >
                 {({ isActive }) => (

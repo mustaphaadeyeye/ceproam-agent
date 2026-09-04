@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TRANSACTIONS, formatNaira, STATUS_STYLES } from "../transactions/Transactionsdata";
+import { useQuery } from "@tanstack/react-query";
+import api from "../../api/axios";
 
 const TABS = ["All Transactions", "Properties", "Investments", "Withdrawals"];
+
+const STATUS_STYLES = {
+  Completed: "bg-emerald-100 text-emerald-700",
+  Pending: "bg-amber-100 text-amber-700",
+  Failed: "bg-red-100 text-red-700",
+};
 
 function StatusBadge({ status }) {
   const style = STATUS_STYLES[status] || "bg-gray-100 text-gray-600";
@@ -16,7 +23,15 @@ function StatusBadge({ status }) {
 }
 
 function TransactionsTable({ transactions, onView }) {
-  const headers = ["Sent to", "Transaction date", "Recipient", "Amount", "Status", "Type", "Action"];
+  const headers = [
+    "Sent to",
+    "Transaction date",
+    "Recipient",
+    "Amount",
+    "Status",
+    "Type",
+    "Action",
+  ];
 
   return (
     <div className="overflow-x-auto">
@@ -37,10 +52,14 @@ function TransactionsTable({ transactions, onView }) {
           {transactions.map((tx) => (
             <tr key={tx.id} className="border-b border-gray-100">
               <td className="px-4 py-4 text-sm text-gray-900">{tx.sentTo}</td>
-              <td className="px-4 py-4 text-sm text-gray-500">{tx.date}</td>
-              <td className="px-4 py-4 text-sm font-medium text-blue-700">{tx.recipient}</td>
+              <td className="px-4 py-4 text-sm text-gray-500">
+                {tx.transactionDate}
+              </td>
+              <td className="px-4 py-4 text-sm font-medium text-blue-700">
+                {tx.recipient}
+              </td>
               <td className="px-4 py-4 text-sm font-medium text-gray-900">
-                {formatNaira(tx.amount)}
+                {tx.amount}
               </td>
               <td className="px-4 py-4">
                 <StatusBadge status={tx.status} />
@@ -49,7 +68,7 @@ function TransactionsTable({ transactions, onView }) {
               <td className="px-4 py-4">
                 <button
                   onClick={() => onView(tx)}
-                  className="cursor-pointer border-none bg-transparent p-0 text-sm font-medium text-blue-700  hover:text-blue-800"
+                  className="cursor-pointer border-none bg-transparent p-0 text-sm font-medium text-blue-700 hover:text-blue-800"
                 >
                   View transaction
                 </button>
@@ -65,6 +84,17 @@ function TransactionsTable({ transactions, onView }) {
 export default function TransactionsDashboard() {
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const navigate = useNavigate();
+
+  // Fetch agent-scoped transaction list based on selected tab filter
+  const { data: rows = [], isLoading } = useQuery({
+    queryKey: ["transactions-table-list", activeTab],
+    queryFn: async () => {
+      const res = await api.get("/transactions/table-list", {
+        params: { tab: activeTab },
+      });
+      return res?.data ?? res;
+    },
+  });
 
   const handleView = (tx) => {
     navigate(`/transactions/${tx.id}`);
@@ -87,7 +117,18 @@ export default function TransactionsDashboard() {
           </button>
         ))}
       </div>
-      <TransactionsTable transactions={TRANSACTIONS} onView={handleView} />
+
+      {isLoading ? (
+        <div className="py-12 text-center text-sm text-gray-400 animate-pulse">
+          Loading transactions...
+        </div>
+      ) : rows.length === 0 ? (
+        <div className="py-12 text-center text-sm text-gray-400">
+          No transactions found for "{activeTab}".
+        </div>
+      ) : (
+        <TransactionsTable transactions={rows} onView={handleView} />
+      )}
     </div>
   );
 }
