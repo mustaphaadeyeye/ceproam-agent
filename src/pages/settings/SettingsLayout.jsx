@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import Wrapper from "../../components/Wrapper";
 import ProfileImg from "../../assets/images/profile.png";
-// import ProfileImg from "../../assets/images/comLogo.png";
 import {
   fontSize,
   fontWeight,
