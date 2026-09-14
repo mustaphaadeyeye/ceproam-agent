@@ -1,8 +1,7 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-// import { Toaster } from "react-hot-toast";
+import { Routes, Route, useParams } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import RequireAuth from "./components/auth/RequireAuth"; // 👈 Import Guard
+import RequireAuth from "./components/auth/RequireAuth";
 import MainLayout from "./layout/MainLayout";
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import Properties from "./pages/properties/Properties";
@@ -26,6 +25,13 @@ import Login from "./pages/authentication/Login";
 import PersonalInfo from "./pages/authentication/PersonalInfo";
 import Kyc from "./pages/authentication/Kyc";
 import ForgotPassword from "./pages/authentication/ForgotPassword";
+import ChatLayout from "./pages/chat/ChatLayout";
+
+// Helper wrapper forcing ChatLayout to remount instantly when userId changes
+const ChatRouteWrapper = () => {
+  const { userId } = useParams();
+  return <ChatLayout key={userId || "general-chat"} />;
+};
 
 function App() {
   return (
@@ -99,6 +105,8 @@ function App() {
           <Route path="available-property" element={<AvailableProperty />} />
           <Route path="pending-property" element={<PendingProperty />} />
           <Route path="sold-property" element={<SoldProperty />} />
+          <Route path="chat" element={<ChatRouteWrapper />} />
+          <Route path="chat/:userId" element={<ChatRouteWrapper />} />
         </Route>
       </Routes>
     </>

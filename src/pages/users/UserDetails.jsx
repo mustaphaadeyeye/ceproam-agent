@@ -6,6 +6,10 @@ import {
   MapPin,
   Briefcase,
   Calendar,
+  Building,
+  TrendingUp,
+  ExternalLink,
+  MessageSquare,
 } from "lucide-react";
 import Wrapper from "../../components/Wrapper";
 import { fontFamily } from "../../styles/theme";
@@ -65,10 +69,11 @@ const UserDetails = () => {
     { label: "Address", value: user.address || "N/A" },
     { label: "State", value: user.state || "N/A" },
     { label: "Occupation", value: user.occupation || "N/A" },
-    { label: "Total Investment Value", value: user.totalInvestmentValue },
+    { label: "Investment/Property Value", value: user.totalInvestmentValue },
   ];
 
-  const primaryProperty = user.properties?.[0];
+  const propertiesList = user.properties || [];
+  const investmentsList = user.investments || [];
 
   return (
     <Wrapper>
@@ -92,8 +97,18 @@ const UserDetails = () => {
               </p>
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={() => navigate(`/app/chat/${user.id}`)}
+            className="flex items-center gap-2 bg-[#05062F] hover:bg-[#1a2352] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer"
+          >
+            <MessageSquare size={15} />
+            Message User
+          </button>
         </div>
 
+<<<<<<< HEAD
         {/* User Info Card / Summary */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-8 grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="flex items-center gap-3">
@@ -103,26 +118,55 @@ const UserDetails = () => {
             <div>
               <p className="text-xs text-gray-400">Email Address</p>
               <p className="text-sm font-semibold text-indigo-600">
+=======
+        {/* User Bio Card / Profile Section */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-8 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+          <div className="w-20 h-20 rounded-full bg-indigo-50 border border-indigo-100 overflow-hidden shrink-0 flex items-center justify-center text-indigo-600 font-bold text-2xl shadow-inner">
+            {user.faceCaptureUrl ? (
+              <img
+                src={user.faceCaptureUrl}
+                alt={user.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              user.name?.charAt(0) || "U"
+            )}
+          </div>
+
+          <div className="flex-1 flex flex-col sm:flex-row justify-between items-center sm:items-start w-full gap-4 text-center sm:text-left">
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">{user.name}</h2>
+              <p className="text-xs text-indigo-600 font-medium mt-0.5">
+>>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
                 {user.email}
               </p>
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-3 text-xs text-gray-500">
+                <span className="flex items-center gap-1">
+                  <Phone size={13} className="text-gray-400" />
+                  {user.phoneNumber || "No phone"}
+                </span>
+                <span className="flex items-center gap-1">
+                  <MapPin size={13} className="text-gray-400" />
+                  {user.address || "No address"}, {user.state || "Nigeria"}
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
-              <Briefcase size={18} />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Occupation</p>
-              <p className="text-sm font-semibold text-gray-800">
-                {user.occupation || "N/A"}
+
+            <div className="bg-indigo-50/60 border border-indigo-100 px-4 py-3 rounded-xl text-center shrink-0">
+              <p className="text-[11px] font-semibold text-indigo-600 uppercase tracking-wider">
+                Total Portfolio Value
+              </p>
+              <p className="text-base font-bold text-[#05062F] mt-0.5">
+                {user.totalInvestmentValue}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Optional Property Showcase if User has Properties */}
-        {primaryProperty && (
+        {/* Purchased Properties Section */}
+        {propertiesList.length > 0 && (
           <div className="mb-8">
+<<<<<<< HEAD
             <h3 className="mb-3 font-bold text-gray-900">
               Associated Property
             </h3>
@@ -144,7 +188,167 @@ const UserDetails = () => {
                 <p className="text-sm text-gray-600 mt-3 leading-relaxed">
                   {primaryProperty.description}
                 </p>
+=======
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
+                <Building size={16} />
+>>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
               </div>
+              <h3 className="font-bold text-gray-900 text-base">
+                Purchased Properties ({propertiesList.length})
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {propertiesList.map((prop) => (
+                <div
+                  key={prop.id}
+                  onClick={() =>
+                    navigate(`/app/available-property?id=${prop.id}`)
+                  }
+                  className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col"
+                >
+                  <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
+                    <img
+                      src={
+                        prop.coverImage ||
+                        prop.images?.[0] ||
+                        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80"
+                      }
+                      alt={prop.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <span className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1 rounded-full">
+                      ₦{Number(prop.price || 0).toLocaleString()}
+                    </span>
+                  </div>
+
+                  <div className="p-5 flex flex-col flex-1 justify-between gap-3">
+                    <div>
+                      <div className="flex items-center justify-between gap-2">
+                        <h4 className="font-bold text-gray-900 text-sm group-hover:text-indigo-600 transition-colors">
+                          {prop.title}
+                        </h4>
+                        <ExternalLink
+                          size={14}
+                          className="text-gray-400 group-hover:text-indigo-600 shrink-0"
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                        <MapPin size={12} className="text-gray-400" />
+                        {prop.location}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-2 line-clamp-2 leading-relaxed">
+                        {prop.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
+                      <span>
+                        Status:{" "}
+                        <strong className="text-emerald-600">
+                          Sold / Owned
+                        </strong>
+                      </span>
+                      <span className="font-semibold text-indigo-600 group-hover:underline">
+                        View Property &rarr;
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Investment Subscriptions Section */}
+        {investmentsList.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
+                <TrendingUp size={16} />
+              </div>
+              <h3 className="font-bold text-gray-900 text-base">
+                Investment Subscriptions ({investmentsList.length})
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {investmentsList.map((inv) => {
+                const pkg = inv.investmentPackage || {};
+                const pkgId = pkg.id || inv.investmentPackageId;
+                const pkgImage =
+                  pkg.coverImage ||
+                  pkg.images?.[0] ||
+                  "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80";
+
+                return (
+                  <div
+                    key={inv.id}
+                    onClick={() =>
+                      pkgId && navigate(`/app/investments/${pkgId}`)
+                    }
+                    className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col"
+                  >
+                    <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
+                      <img
+                        src={pkgImage}
+                        alt={pkg.name || "Investment"}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <span className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1 rounded-full">
+                        ROI: {pkg.roi || 0}%
+                      </span>
+                    </div>
+
+                    <div className="p-5 flex flex-col flex-1 justify-between gap-4">
+                      <div>
+                        <div className="flex items-center justify-between gap-2">
+                          <h4 className="font-bold text-gray-900 text-sm group-hover:text-indigo-600 transition-colors">
+                            {pkg.name || "Investment Package"}
+                          </h4>
+                          <ExternalLink
+                            size={14}
+                            className="text-gray-400 group-hover:text-indigo-600 shrink-0"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                          {pkg.description ||
+                            "Real Estate & Asset Growth Package"}
+                        </p>
+                      </div>
+
+                      <div className="bg-gray-50 rounded-xl p-3 grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                          <p className="text-gray-400 text-[10px]">
+                            Amount Invested
+                          </p>
+                          <p className="font-bold text-gray-900 mt-0.5">
+                            ₦{Number(inv.amountInvested || 0).toLocaleString()}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-gray-400 text-[10px]">
+                            Expected Return
+                          </p>
+                          <p className="font-bold text-emerald-600 mt-0.5">
+                            ₦{Number(inv.expectedReturn || 0).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] text-gray-500 pt-1 border-t border-gray-100">
+                        <span className="inline-block bg-green-50 text-green-700 font-semibold px-2 py-0.5 rounded-md">
+                          Active Investment
+                        </span>
+                        <span className="font-semibold text-indigo-600 group-hover:underline">
+                          View Investment &rarr;
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

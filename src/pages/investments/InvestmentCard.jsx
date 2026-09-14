@@ -1,36 +1,36 @@
-import { useNavigate } from 'react-router-dom'
-import { Users } from 'lucide-react'
-import Button from "../../components/Button"
-import buttonImg from "../../assets/icons/button.png"
+import { useNavigate } from "react-router-dom";
+import { Users } from "lucide-react";
+import Button from "../../components/Button";
+import buttonImg from "../../assets/icons/button.png";
 
 const statusStyles = {
-  Ongoing: 'bg-green-50 text-green-600',
-  Closed: 'bg-red-50 text-red-500',
-  Pending: 'bg-yellow-50 text-yellow-600',
-}
+  Ongoing: "bg-green-50 text-green-600",
+  Closed: "bg-red-50 text-red-500",
+  Pending: "bg-yellow-50 text-yellow-600",
+};
 
 const InvestmentCard = ({
   image,
-  status = 'Ongoing',
-  id = 'INV-001',
-  title = 'Property Title',
+  status = "Ongoing",
+  id = "INV-001",
+  title = "Property Title",
   investors = 156,
-  description = '',
-  investmentValue = '$0',
-  roiLabel = 'Expected ROI',
-  roi = '0%',
-  duration = '0 months',
+  description = "",
+  investmentValue = "0",
+  roiLabel = "Expected ROI",
+  roi = "0%",
+  duration = "0 months",
 }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleViewDetails = () => {
-    navigate(`/app/investments/${id}`)
-  }
+    navigate(`/app/investments/${id}`);
+  };
 
   // 🎯 Route directly to edit-details with the investment ID query parameter
   const handleEdit = () => {
-    navigate(`/app/edit-details?id=${id}`)
-  }
+    navigate(`/app/edit-details?id=${id}`);
+  };
 
   return (
     <div className="w-full bg-white relative rounded-xl border border-gray-200 overflow-hidden shadow-sm pb-14">
@@ -50,9 +50,17 @@ const InvestmentCard = ({
           <span className="text-xs text-gray-400">ID: {id}</span>
         </div>
 
+<<<<<<< HEAD
         <div className='flex flex-wrap items-start justify-between gap-2'>
           <h3 className="text-blue-900 font-semibold text-base mb-2">{title}</h3>
           <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-2 shrink-0">
+=======
+        <div className="flex justify-between">
+          <h3 className="text-blue-900 font-semibold text-base mb-2">
+            {title}
+          </h3>
+          <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
+>>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
             <Users size={13} />
             <span>{investors} Investors</span>
           </div>
@@ -91,13 +99,23 @@ const InvestmentCard = ({
             height="40px"
             className="flex-1 cursor-pointer"
           />
+<<<<<<< HEAD
           <div className="shrink-0">
             <img src={buttonImg} alt="Edit" onClick={handleEdit} className="cursor-pointer hover:opacity-80 transition" />
+=======
+          <div>
+            <img
+              src={buttonImg}
+              alt="Edit"
+              onClick={handleEdit}
+              className="cursor-pointer hover:opacity-80 transition"
+            />
+>>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default InvestmentCard
+export default InvestmentCard;

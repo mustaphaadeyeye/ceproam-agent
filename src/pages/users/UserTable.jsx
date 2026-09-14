@@ -91,7 +91,8 @@ export default function UserTable() {
     "User Name",
     "Date Joined",
     "Email address",
-    "Investment Value",
+    "Investment/Property Value",
+    "Count",
     "Type",
     "Action",
   ];
@@ -121,7 +122,7 @@ export default function UserTable() {
             {isLoading ? (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-3 py-10 text-center text-gray-400 animate-pulse"
                 >
                   Loading users...
@@ -142,6 +143,9 @@ export default function UserTable() {
                   <td className="whitespace-nowrap border-b border-gray-50 px-3 py-4 text-sm font-medium text-indigo-600">
                     {row?.investmentValue || row?.value || "₦0"}
                   </td>
+                  <td className="whitespace-nowrap border-b border-gray-50 px-3 py-4 text-sm font-semibold text-gray-700 text-center">
+                    {row?.count ?? row?.itemCount ?? 0}
+                  </td>
                   <td className="whitespace-nowrap border-b border-gray-50 px-3 py-4">
                     <TypeBadge type={row?.type} />
                   </td>
@@ -159,7 +163,7 @@ export default function UserTable() {
             {!isLoading && rows.length === 0 && (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-3 py-10 text-center text-gray-400"
                 >
                   No users found for "{filter}"
