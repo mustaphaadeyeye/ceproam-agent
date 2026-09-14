@@ -11,6 +11,29 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import api from "../../api/axios";
 
+// Helper to format currency values for axis and tooltip (e.g., ₦200K, ₦1.5M)
+const formatRevenueValue = (val) => {
+  if (val == null) return "₦0";
+  if (val >= 1_000_000_000) return `₦${(val / 1_000_000_000).toFixed(1)}B`;
+  if (val >= 1_000_000) return `₦${(val / 1_000_000).toFixed(1)}M`;
+  if (val >= 1_000) return `₦${(val / 1_000).toFixed(0)}K`;
+  return `₦${val.toLocaleString()}`;
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white rounded-lg border border-gray-100 p-3 shadow-lg text-xs">
+        <p className="font-semibold text-gray-700 mb-1">{label}</p>
+        <p className="font-bold text-red-500">
+          Revenue: {formatRevenueValue(payload[0].value)}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function RevenueChart() {
   const [timeframe, setTimeframe] = useState("12months");
 
@@ -61,12 +84,18 @@ export default function RevenueChart() {
               dataKey="label"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: "#6B7280" }}
             />
 
-            <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tick={{ fontSize: 11, fill: "#6B7280" }}
+              tickFormatter={formatRevenueValue}
+              width={65}
+            />
 
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
 
             <Area
               type="monotone"
