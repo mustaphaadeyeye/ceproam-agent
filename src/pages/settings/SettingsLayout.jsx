@@ -794,7 +794,7 @@ const SettingsLayout = () => {
         {/* =================================================
             MOBILE
         ================================================= */}
-        <div className="lg:hidden">
+        <div className="lg:hidden xl:mt-0 lg:mt-0 mt-12">
           {!mobileDetailOpen ? (
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center gap-2 mt-2">

@@ -74,7 +74,7 @@ const DashboardLayout = () => {
     <div className={`${fontFamily.main}`}>
       <Wrapper>
         {/* Top Metric Cards - 2 per row on mobile, 4 per row from xl up */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 xl:mt-0 lg:mt-0 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 xl:mt-0 lg:mt-0 mt-12">
           {/* Total Properties */}
           <BackgroundCard rounded="2xl">
             <div className="py-4 px-4 sm:py-5 sm:px-6">
