@@ -89,11 +89,7 @@ const Notification = () => {
   return (
     <div className={`${fontFamily.main} xl:mt-0 lg:mt-0 mt-12`}>
       <Wrapper>
-<<<<<<< HEAD
-        <div className="flex bg-white px-4 sm:px-5 md:px-7 pt-6 pb-10 rounded-2xl">
-=======
         <div className="flex bg-white px-5 sm:px-7 pt-6 pb-10 rounded-2xl shadow-sm border border-gray-100">
->>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
           {/* Notifications column */}
           <div className="w-full lg:max-w-[520px] flex flex-col">
             <div className="flex items-center justify-between mb-6">

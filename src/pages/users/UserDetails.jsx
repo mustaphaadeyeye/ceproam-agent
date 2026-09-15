@@ -108,17 +108,6 @@ const UserDetails = () => {
           </button>
         </div>
 
-<<<<<<< HEAD
-        {/* User Info Card / Summary */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-8 grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold">
-              {user.name?.charAt(0) || "U"}
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Email Address</p>
-              <p className="text-sm font-semibold text-indigo-600">
-=======
         {/* User Bio Card / Profile Section */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-8 flex flex-col sm:flex-row items-center sm:items-start gap-6">
           <div className="w-20 h-20 rounded-full bg-indigo-50 border border-indigo-100 overflow-hidden shrink-0 flex items-center justify-center text-indigo-600 font-bold text-2xl shadow-inner">
@@ -137,7 +126,6 @@ const UserDetails = () => {
             <div>
               <h2 className="text-lg font-bold text-gray-900">{user.name}</h2>
               <p className="text-xs text-indigo-600 font-medium mt-0.5">
->>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
                 {user.email}
               </p>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-3 text-xs text-gray-500">
@@ -166,33 +154,9 @@ const UserDetails = () => {
         {/* Purchased Properties Section */}
         {propertiesList.length > 0 && (
           <div className="mb-8">
-<<<<<<< HEAD
-            <h3 className="mb-3 font-bold text-gray-900">
-              Associated Property
-            </h3>
-            <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
-              <img
-                src={
-                  primaryProperty.coverImage
-                }
-                alt="Property"
-                className="h-[230px] w-full object-cover sm:h-[280px]"
-              />
-              <div className="p-5">
-                <h4 className="font-bold text-gray-900 text-base">
-                  {primaryProperty.title}
-                </h4>
-                <p className="text-xs text-gray-500 mt-1">
-                  {primaryProperty.location}
-                </p>
-                <p className="text-sm text-gray-600 mt-3 leading-relaxed">
-                  {primaryProperty.description}
-                </p>
-=======
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
                 <Building size={16} />
->>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
               </div>
               <h3 className="font-bold text-gray-900 text-base">
                 Purchased Properties ({propertiesList.length})

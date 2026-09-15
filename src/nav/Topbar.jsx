@@ -89,27 +89,6 @@ const Topbar = () => {
                   to={item.path}
                   end={item.path === "/app"}
                 >
-<<<<<<< HEAD
-                  {({ isActive }) => (
-                    <div className="flex items-center gap-2 cursor-pointer transition duration-200">
-                      <img
-                        src={item.icon}
-                        alt={item.label}
-                        className="w-4.5 h-4.5"
-                        style={{
-                          filter: isActive ? activeIconFilter.filter : "none",
-                        }}
-                      />
-                      <span
-                        className={`text-[15px] font-normal whitespace-nowrap ${
-                          isActive ? "text-[#EC2614]" : "text-[#05062F]"
-                        }`}
-                      >
-                        {item.label}
-                      </span>
-                    </div>
-                  )}
-=======
                   {({ isActive }) => {
                     const isChat = item.path === "/app/chat";
                     return (
@@ -144,7 +123,6 @@ const Topbar = () => {
                       </div>
                     );
                   }}
->>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
                 </NavLink>
               ))}
             </nav>
@@ -162,8 +140,6 @@ const Topbar = () => {
               />
             </div>
 
-<<<<<<< HEAD
-=======
             <button
               type="button"
               aria-label="Search"
@@ -172,7 +148,6 @@ const Topbar = () => {
               <Search size={20} />
             </button>
 
->>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
             <div className="relative cursor-pointer">
               <Bell
                 size={21}
@@ -198,8 +173,6 @@ const Topbar = () => {
                 className="w-8 h-8 rounded-full object-cover border border-gray-200"
               />
             </div>
-<<<<<<< HEAD
-=======
 
             <button
               type="button"
@@ -209,7 +182,6 @@ const Topbar = () => {
             >
               {mobileOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
->>>>>>> 923e1e29c0b5305a1db09a390c95ce58a404f41e
           </div>
         </div>
 
