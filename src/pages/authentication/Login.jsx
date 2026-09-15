@@ -103,7 +103,7 @@ const Login = () => {
         <div className="bg-white w-full max-w-[520px] rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-[#F1F1F1] px-6 sm:px-10 py-10 sm:py-12">
           <div className="text-center mb-10">
             <h2 className="text-[22px] font-semibold text-[#111827]">
-              Agent Portal Login
+              Admin Portal Login
             </h2>
             <p className="text-[#6B7280] text-[13px] leading-5 mt-2">
               Log in to manage properties, investments,
