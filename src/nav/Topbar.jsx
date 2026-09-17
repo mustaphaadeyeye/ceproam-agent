@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Logo from "../assets/images/ceproamlogo.svg";
 import DashImg from "../assets/icons/myhouse.png";
 import GrowthIcon from "../assets/icons/mygro.png";
@@ -33,7 +33,30 @@ const activeIconFilter = {
 
 const Topbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const mobileSearchRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!mobileSearchOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (
+        mobileSearchRef.current &&
+        !mobileSearchRef.current.contains(event.target)
+      ) {
+        setMobileSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [mobileSearchOpen]);
 
   const { data: user } = useProfile();
   const userAvatar = user?.faceCaptureUrl || Jimage;
@@ -140,13 +163,30 @@ const Topbar = () => {
               />
             </div>
 
-            <button
-              type="button"
-              aria-label="Search"
-              className="lg:hidden text-[#05062F]"
-            >
-              <Search size={20} />
-            </button>
+            {/* Mobile search - expands into an input on click */}
+            <div className="lg:hidden flex items-center" ref={mobileSearchRef}>
+              {mobileSearchOpen ? (
+                <div className="flex items-center animate-in fade-in slide-in-from-right-2 duration-200">
+                  <SearchInput
+                    icon={Search}
+                    placeholder="Search..."
+                    width="160px"
+                    height="38px"
+                    rounded="lg"
+                    autoFocus
+                  />
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  aria-label="Search"
+                  onClick={() => setMobileSearchOpen(true)}
+                  className="text-[#05062F]"
+                >
+                  <Search size={20} />
+                </button>
+              )}
+            </div>
 
             <div className="relative cursor-pointer">
               <Bell
