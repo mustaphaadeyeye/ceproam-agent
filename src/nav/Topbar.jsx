@@ -61,7 +61,7 @@ const Topbar = () => {
       <Wrapper>
         <div className="h-16 xl:h-18 flex items-center justify-between">
           {/* Left */}
-          <div className="flex items-center gap-4 xl:gap-14">
+          <div className="flex items-center  gap-4 xl:gap-5 ">
             {/* Hamburger - shows in place of the logo below xl */}
             <button
               type="button"
@@ -174,14 +174,14 @@ const Topbar = () => {
               />
             </div>
 
-            <button
+            {/* <button
               type="button"
               aria-label="Toggle menu"
               onClick={() => setMobileOpen((prev) => !prev)}
               className="xl:hidden text-[#05062F] ml-1"
             >
               {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            </button> */}
           </div>
         </div>
 
