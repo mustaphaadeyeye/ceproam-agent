@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
 import {
   fontSize,
   fontWeight,
@@ -119,13 +120,17 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
 
   const content = (
     <div
-      className={`flex h-[78vh] ${fontFamily.main} bg-white rounded-[20px] shadow-lg overflow-hidden border border-gray-100 ${
-        variant === "settings" ? "p-0" : "my-4 mx-auto max-w-6xl"
+      className={`flex h-[85vh] md:h-[78vh] ${fontFamily.main} bg-white md:rounded-[20px] shadow-lg overflow-hidden border border-gray-100 xl:mt-0 lg:mt-0 mt-12 ${
+        variant === "settings" ? "p-0" : "my-0 md:my-4 mx-auto max-w-6xl"
       }`}
     >
       {/* Sidebar - Conversation List */}
-      <div className="w-1/3 border-r border-gray-100 flex flex-col bg-[#F8FAFD]">
-        <div className="p-5 border-b border-gray-100">
+      <div
+        className={`w-full md:w-1/3 border-r border-gray-100 flex-col bg-[#F8FAFD] ${
+          userId ? "hidden md:flex" : "flex"
+        }`}
+      >
+        <div className="p-4 md:p-5 border-b border-gray-100">
           <h2
             className={`${fontSize.lg} ${fontWeight.semibold} ${textColor.primary}`}
           >
@@ -147,13 +152,13 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
               <div
                 key={conv.chatId}
                 onClick={() => navigate(`/app/chat/${conv.partnerId}`)}
-                className={`p-4 flex items-center gap-3 cursor-pointer transition relative ${
+                className={`p-3 md:p-4 flex items-center gap-3 cursor-pointer transition relative ${
                   userId === conv.partnerId
                     ? "bg-[#DBE8FD]/60 border-l-4 border-[#2540A8]"
                     : "hover:bg-gray-50"
                 }`}
               >
-                <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden shrink-0 flex items-center justify-center font-bold text-[#05062F]">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-gray-200 overflow-hidden shrink-0 flex items-center justify-center font-bold text-[#05062F]">
                   {conv.avatar ? (
                     <img
                       src={conv.avatar}
@@ -169,7 +174,7 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
                     <h4 className="text-xs font-bold text-[#05062F] truncate">
                       {conv.name}
                     </h4>
-                    <span className="text-[10px] text-gray-400">
+                    <span className="text-[10px] text-gray-400 shrink-0 ml-1">
                       {new Date(conv.updatedAt).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -195,12 +200,24 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
       </div>
 
       {/* Right Side - Active Chat Box */}
-      <div className="flex-1 flex flex-col bg-white">
+      <div
+        className={`flex-1 flex-col bg-white min-w-0 ${
+          userId ? "flex" : "hidden md:flex"
+        }`}
+      >
         {userId ? (
           <>
             {/* Chat Header */}
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3 bg-white">
-              <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center font-bold text-[#05062F] shrink-0">
+            <div className="px-3 md:px-6 py-3 md:py-4 border-b border-gray-100 flex items-center gap-2 md:gap-3 bg-white">
+              <button
+                type="button"
+                aria-label="Back to conversations"
+                onClick={() => navigate("/app/chat")}
+                className="md:hidden text-[#05062F] shrink-0 -ml-1 p-1"
+              >
+                <ArrowLeft size={20} />
+              </button>
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center font-bold text-[#05062F] shrink-0">
                 {activePartner?.avatar ? (
                   <img
                     src={activePartner.avatar}
@@ -211,12 +228,12 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
                   activePartner?.name?.charAt(0) || "U"
                 )}
               </div>
-              <div className="flex flex-col">
-                <h3 className="text-sm font-bold text-[#05062F]">
+              <div className="flex flex-col min-w-0">
+                <h3 className="text-sm font-bold text-[#05062F] truncate">
                   {activePartner?.name || "Loading..."}
                 </h3>
                 <span
-                  className={`text-[11px] font-medium ${isOnline ? "text-emerald-600" : "text-gray-400"}`}
+                  className={`text-[11px] font-medium truncate ${isOnline ? "text-emerald-600" : "text-gray-400"}`}
                 >
                   {isOnline
                     ? "● Online"
@@ -226,16 +243,16 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-4 bg-[#F9FBFC]">
+            <div className="flex-1 p-3 md:p-6 overflow-y-auto flex flex-col gap-3 md:gap-4 bg-[#F9FBFC]">
               {activeChatMessages.map((msg, i) => {
                 const isUser = msg.senderId !== userId;
                 return (
                   <div
                     key={msg.id || i}
-                    className={`flex items-end gap-2.5 ${isUser ? "flex-row-reverse" : "flex-row"}`}
+                    className={`flex items-end gap-2 md:gap-2.5 ${isUser ? "flex-row-reverse" : "flex-row"}`}
                   >
                     {!isUser && (
-                      <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden shrink-0 flex items-center justify-center text-xs font-bold">
+                      <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gray-200 overflow-hidden shrink-0 flex items-center justify-center text-xs font-bold">
                         {activePartner?.avatar ? (
                           <img
                             src={activePartner.avatar}
@@ -248,7 +265,7 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
                       </div>
                     )}
                     <div
-                      className={`max-w-[70%] px-4 py-3 text-xs leading-relaxed rounded-2xl shadow-xs ${
+                      className={`max-w-[80%] sm:max-w-[70%] px-3.5 md:px-4 py-2.5 md:py-3 text-xs leading-relaxed rounded-2xl shadow-xs ${
                         isUser
                           ? "bg-[#2540A8] text-white rounded-br-sm"
                           : "bg-white text-[#05062F] border border-gray-100 rounded-bl-sm"
@@ -273,7 +290,7 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
             </div>
 
             {/* Input Bar */}
-            <div className="p-4 bg-white border-t border-gray-100 flex items-center gap-3">
+            <div className="p-3 md:p-4 bg-white border-t border-gray-100 flex items-center gap-2 md:gap-3">
               <input
                 type="text"
                 value={text}
@@ -282,12 +299,12 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
                   if (e.key === "Enter") send();
                 }}
                 placeholder="Type your message..."
-                className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs outline-none focus:border-[#2540A8] transition"
+                className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-xl px-3.5 md:px-4 py-2.5 md:py-3 text-xs outline-none focus:border-[#2540A8] transition"
               />
               <button
                 onClick={send}
                 disabled={isPending}
-                className="w-11 h-11 rounded-xl bg-[#05062F] hover:bg-[#1a2352] text-white flex items-center justify-center cursor-pointer transition shrink-0 shadow-sm"
+                className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-[#05062F] hover:bg-[#1a2352] text-white flex items-center justify-center cursor-pointer transition shrink-0 shadow-sm"
               >
                 <img
                   src={SendIcon}
@@ -298,7 +315,7 @@ const ChatLayout = ({ variant = "default", userId: propUserId }) => {
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-gray-50/50">
+          <div className="flex-1 flex-col items-center justify-center p-8 text-center bg-gray-50/50 hidden md:flex">
             <div className="w-16 h-16 rounded-full bg-[#DBE8FD] flex items-center justify-center mb-3">
               <img src={ChatPro} alt="" className="w-8 h-8 opacity-75" />
             </div>
